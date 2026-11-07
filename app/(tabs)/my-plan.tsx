@@ -27,6 +27,7 @@ import { useToast } from '../../src/context/ToastContext'
 import { useBreakpoint } from '../../src/hooks/useBreakpoint'
 import { Button } from '../../src/components/common/Button'
 import { Chip } from '../../src/components/common/Chip'
+import { softShadow } from '../../src/theme/shadows'
 
 export default function MyPlanScreen() {
   const router = useRouter()
@@ -109,7 +110,10 @@ export default function MyPlanScreen() {
 
         {/* STATE 1: EMPTY */}
         {effectiveState === 'EMPTY' && (
-          <View className="bg-white rounded-2xl border border-slate-200/80 p-8 sm:p-12 items-center text-center shadow-sm max-w-md mx-auto my-6 w-full gap-4">
+          <View
+            style={[softShadow, { borderRadius: 20 }]}
+            className="bg-white border border-black/[0.04] p-8 sm:p-12 items-center text-center max-w-md mx-auto my-6 w-full gap-4"
+          >
             <View className="w-16 h-16 rounded-full bg-slate-100 items-center justify-center">
               <Dumbbell size={32} color="#94A3B8" />
             </View>
@@ -134,7 +138,10 @@ export default function MyPlanScreen() {
 
         {/* STATE 2: PAID NOT ACTIVATED */}
         {effectiveState === 'PAID_NOT_ACTIVATED' && (
-          <View className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm max-w-xl mx-auto w-full gap-5 items-center">
+          <View
+            style={[softShadow, { borderRadius: 20 }]}
+            className="bg-white border border-black/[0.04] p-5 sm:p-6 max-w-xl mx-auto w-full gap-5 items-center"
+          >
             <View className="w-full gap-1">
               <View className="flex-row items-center justify-between">
                 <Text className="text-lg font-bold text-slate-900">{gymName}</Text>
@@ -187,7 +194,10 @@ export default function MyPlanScreen() {
 
         {/* STATE 3: EXPIRED */}
         {effectiveState === 'EXPIRED' && (
-          <View className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm max-w-xl mx-auto w-full gap-5">
+          <View
+            style={[softShadow, { borderRadius: 20 }]}
+            className="bg-white border border-black/[0.04] p-6 max-w-xl mx-auto w-full gap-5"
+          >
             <View className="flex-row items-start justify-between">
               <View>
                 <Text className="text-lg font-bold text-slate-900">{gymName}</Text>
@@ -220,7 +230,10 @@ export default function MyPlanScreen() {
         {/* STATE 4 & 5: ACTIVE OR EXPIRING */}
         {(effectiveState === 'ACTIVE' || effectiveState === 'EXPIRING') && (
           <View className="gap-6 max-w-xl mx-auto w-full">
-            <View className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm gap-5">
+            <View
+              style={[softShadow, { borderRadius: 20 }]}
+              className="bg-white border border-black/[0.04] p-5 sm:p-6 gap-5"
+            >
               {/* Expiring Banner */}
               {effectiveState === 'EXPIRING' && (
                 <View className="bg-amber-50 border border-amber-200/80 rounded-xl p-3 flex-row items-center gap-2">

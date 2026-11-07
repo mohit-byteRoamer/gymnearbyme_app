@@ -15,6 +15,7 @@ import { useToast } from '../../../src/context/ToastContext'
 import { formatINR } from '../../../src/utils/formatters'
 import { Chip } from '../../../src/components/common/Chip'
 import { Button } from '../../../src/components/common/Button'
+import { softShadow } from '../../../src/theme/shadows'
 
 export default function TransactionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -103,7 +104,10 @@ export default function TransactionDetailScreen() {
         </View>
 
         {/* Card with Breakdown Rows */}
-        <View className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-sm gap-3.5">
+        <View
+          style={[softShadow, { borderRadius: 20 }]}
+          className="bg-white border border-black/[0.04] p-5 gap-3.5"
+        >
           <View className="flex-row justify-between py-1">
             <Text className="text-slate-400 font-medium text-xs">Gym</Text>
             <Text className="font-semibold text-slate-900 text-xs text-right">

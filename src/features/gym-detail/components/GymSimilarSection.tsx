@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router'
 import { MapPin, Star, Sparkles, ChevronRight } from 'lucide-react-native'
 import { SIMILAR_GYMS } from '../api/gymApi'
 import { formatINR } from '../utils/pricing'
+import { softShadow } from '@/theme/shadows'
 
 export function GymSimilarSection() {
   const router = useRouter()
@@ -36,14 +37,16 @@ export function GymSimilarSection() {
           <Pressable
             key={gym.id}
             onPress={() => router.push(`/gym/${gym.id}` as any)}
-            className="w-64 sm:w-72 bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden flex-col active:scale-[0.99]"
+            style={[softShadow, { borderRadius: 24 }]}
+            className="w-64 sm:w-72 bg-white border border-black/[0.04] active:scale-[0.99]"
           >
-            <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="relative bg-slate-100">
-              <Image
-                source={{ uri: gym.coverPhoto }}
-                contentFit="cover"
-                style={StyleSheet.absoluteFill}
-              />
+            <View style={{ borderRadius: 24, overflow: 'hidden' }} className="flex-col">
+              <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="relative bg-slate-100">
+                <Image
+                  source={{ uri: gym.coverPhoto }}
+                  contentFit="cover"
+                  style={StyleSheet.absoluteFill}
+                />
               {gym.isFeatured && (
                 <View className="absolute top-2.5 left-2.5 bg-brand px-2 py-0.5 rounded-full shadow">
                   <Text className="text-white text-[10px] font-bold">Featured</Text>
@@ -75,7 +78,8 @@ export function GymSimilarSection() {
                 <Text className="text-[11px] text-slate-500">/month</Text>
               </View>
             </View>
-          </Pressable>
+          </View>
+        </Pressable>
         ))}
       </ScrollView>
     </View>

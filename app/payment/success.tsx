@@ -17,6 +17,7 @@ import { useToast } from '../../src/context/ToastContext'
 import { Button } from '../../src/components/common/Button'
 import { Chip } from '../../src/components/common/Chip'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { softShadow } from '../../src/theme/shadows'
 
 export default function PaymentSuccessScreen() {
   const router = useRouter()
@@ -81,7 +82,10 @@ export default function PaymentSuccessScreen() {
         </View>
 
         {/* Card with QR */}
-        <View className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm w-full items-center gap-5">
+        <View
+          style={[softShadow, { borderRadius: 24 }]}
+          className="bg-white border border-black/[0.04] p-6 w-full items-center gap-5"
+        >
           <View className="p-3 bg-white rounded-2xl border border-slate-100 shadow-xs items-center justify-center">
             <QRCode value={voucherCode} size={220} />
           </View>

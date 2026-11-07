@@ -17,6 +17,7 @@ import { GymItem, GymPlan } from '../src/data/gyms'
 import { Button } from '../src/components/common/Button'
 import { Input } from '../src/components/common/Input'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { softShadow } from '../src/theme/shadows'
 
 export default function CheckoutScreen() {
   const router = useRouter()
@@ -88,7 +89,10 @@ export default function CheckoutScreen() {
           <Text className="text-lg font-bold text-slate-900">Checkout</Text>
         </View>
 
-        <View className="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-sm gap-5">
+        <View
+          style={[softShadow, { borderRadius: 20 }]}
+          className="bg-white border border-black/[0.04] p-5 sm:p-6 gap-5"
+        >
           {/* Summary Card */}
           <View className="flex-row items-center gap-3.5 pb-4 border-b border-slate-100">
             <Image

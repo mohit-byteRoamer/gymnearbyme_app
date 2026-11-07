@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Pressable, ViewProps } from 'react-native'
+import { View, Pressable, ViewProps, StyleSheet } from 'react-native'
+import { softShadow } from '../../theme/shadows'
 
 export interface CardProps extends ViewProps {
   children?: React.ReactNode
@@ -17,6 +18,7 @@ export function Card({
   onPress,
   hoverable = false,
   padding = 'p-4 sm:p-5',
+  style,
   ...props
 }: CardProps) {
   const handlePress = onPress || onClick
@@ -26,8 +28,9 @@ export function Card({
     return (
       <Pressable
         onPress={handlePress}
+        style={[softShadow, { borderRadius: 16 }, style as any]}
         className={`
-          bg-white rounded-2xl border border-slate-200/80 shadow-sm
+          bg-white border border-black/[0.04]
           ${padding}
           active:scale-[0.99] active:opacity-95 transition-all
           ${className}
@@ -41,8 +44,9 @@ export function Card({
 
   return (
     <View
+      style={[softShadow, { borderRadius: 16 }, style as any]}
       className={`
-        bg-white rounded-2xl border border-slate-200/80 shadow-sm
+        bg-white border border-black/[0.04]
         ${padding}
         ${className}
       `}
@@ -52,4 +56,3 @@ export function Card({
     </View>
   )
 }
-

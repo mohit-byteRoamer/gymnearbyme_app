@@ -1,5 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
+import { softShadow } from '../../theme/shadows'
 
 export function SkeletonBox({ className = '' }: { className?: string }) {
   return <View className={`bg-slate-200 rounded-lg ${className}`} />
@@ -7,22 +8,24 @@ export function SkeletonBox({ className = '' }: { className?: string }) {
 
 export function GymCardSkeleton() {
   return (
-    <View className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex-col">
-      <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="bg-slate-200 rounded-t-2xl" />
-      <View className="p-4 sm:p-5 flex-1 justify-between gap-3">
-        <View className="gap-2">
-          <View className="flex-row justify-between items-center gap-2">
-            <SkeletonBox className="h-5 w-2/3 rounded-md" />
-            <SkeletonBox className="h-5 w-14 rounded-lg" />
+    <View style={[softShadow, { borderRadius: 16 }]} className="bg-white border border-black/[0.04]">
+      <View style={{ borderRadius: 16, overflow: 'hidden' }} className="flex-col">
+        <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="bg-slate-200" />
+        <View className="p-4 sm:p-5 flex-1 justify-between gap-3">
+          <View className="gap-2">
+            <View className="flex-row justify-between items-center gap-2">
+              <SkeletonBox className="h-5 w-2/3 rounded-md" />
+              <SkeletonBox className="h-5 w-14 rounded-lg" />
+            </View>
+            <SkeletonBox className="h-4 w-1/2 rounded-md" />
           </View>
-          <SkeletonBox className="h-4 w-1/2 rounded-md" />
-        </View>
-        <View className="pt-3 border-t border-slate-100 flex-row items-center justify-between">
-          <View className="gap-1">
-            <SkeletonBox className="h-3 w-16 rounded" />
-            <SkeletonBox className="h-6 w-24 rounded" />
+          <View className="pt-3 border-t border-slate-100 flex-row items-center justify-between">
+            <View className="gap-1">
+              <SkeletonBox className="h-3 w-16 rounded" />
+              <SkeletonBox className="h-6 w-24 rounded" />
+            </View>
+            <SkeletonBox className="h-8 w-16 rounded-lg" />
           </View>
-          <SkeletonBox className="h-8 w-16 rounded-lg" />
         </View>
       </View>
     </View>

@@ -6,6 +6,7 @@ import Svg, { Path } from 'react-native-svg'
 import { useAuth } from '../src/context/AuthContext'
 import { useLocation } from '../src/context/LocationContext'
 import { useDevState } from '../src/context/DevStateContext'
+import { softShadow } from '../src/theme/shadows'
 
 export default function LoginScreen() {
   const { signIn, isLoading, error } = useAuth()
@@ -31,7 +32,10 @@ export default function LoginScreen() {
 
   return (
     <View className="flex-1 bg-slate-50 items-center justify-center p-4 sm:p-6">
-      <View className="w-full max-w-form bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm items-center">
+      <View
+        style={[softShadow, { borderRadius: 24 }]}
+        className="w-full max-w-form bg-white border border-black/[0.04] p-6 sm:p-8 items-center"
+      >
         {/* Logo */}
         <View className="w-14 h-14 rounded-2xl bg-brand items-center justify-center mb-5 shadow-sm">
           <Dumbbell size={28} color="#FFFFFF" />

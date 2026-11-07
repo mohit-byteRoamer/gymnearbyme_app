@@ -18,6 +18,7 @@ import {
 } from '../utils/pricing'
 import { useGymDetailStore } from '../store/gymDetailStore'
 import { useToast } from '@/context/ToastContext'
+import { softShadow } from '@/theme/shadows'
 import { Button } from '@/components/common/Button'
 
 interface Props {
@@ -62,7 +63,10 @@ export function GymPricingCard({ gym }: Props) {
   }
 
   return (
-    <View className="rounded-3xl border border-slate-200/90 bg-white shadow-lg p-5 sm:p-6 gap-5">
+    <View
+      style={[softShadow, { borderRadius: 24 }]}
+      className="border border-black/[0.04] bg-white p-5 sm:p-6 gap-5"
+    >
       {/* Header */}
       <View>
         <View className="flex-row items-center justify-between">

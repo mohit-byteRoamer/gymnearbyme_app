@@ -6,6 +6,7 @@ import { formatINR } from '../../utils/formatters'
 import { Chip } from '../common/Chip'
 import { Button } from '../common/Button'
 import { GymPlan } from '../../data/gyms'
+import { softShadow } from '../../theme/shadows'
 
 export interface PlanCardProps {
   plan: GymPlan
@@ -32,8 +33,9 @@ export function PlanCard({
 
   return (
     <View
+      style={[softShadow, { borderRadius: 16 }]}
       className={`
-        bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm flex-col justify-between
+        bg-white border border-black/[0.04] p-4 flex-col justify-between
         ${className}
       `}
     >

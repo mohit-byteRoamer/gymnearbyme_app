@@ -6,6 +6,7 @@ import { LOCALITIES } from '../src/data/localities'
 import { useLocation } from '../src/context/LocationContext'
 import { Input } from '../src/components/common/Input'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { softShadow } from '../src/theme/shadows'
 
 export default function ChooseAreaScreen() {
   const router = useRouter()
@@ -57,60 +58,65 @@ export default function ChooseAreaScreen() {
         />
 
         {/* Localities Card */}
-        <View className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-          {/* Use My Current Location */}
-          <Pressable
-            onPress={handleUseCurrentLocation}
-            className="w-full px-4 py-3.5 flex-row items-center justify-between active:bg-blue-50/50 border-b border-slate-100"
-          >
-            <View className="flex-row items-center gap-3">
-              <View className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
-                <Navigation size={16} color="#2563EB" />
-              </View>
-              <View>
-                <Text className="text-sm font-semibold text-brand">
-                  Use my current location
-                </Text>
-                <Text className="text-xs text-slate-400">
-                  Detects nearby gyms (Model Town, Ludhiana)
-                </Text>
-              </View>
-            </View>
-          </Pressable>
-
-          {/* Localities List */}
-          {filteredLocalities.map((loc, idx) => {
-            const isSelected = selectedLocality.id === loc.id
-            return (
-              <Pressable
-                key={loc.id}
-                onPress={() => handleSelect(loc.id)}
-                className={`w-full px-4 py-3.5 flex-row items-center justify-between active:bg-slate-50 ${
-                  idx > 0 ? 'border-t border-slate-100' : ''
-                }`}
-              >
-                <View className="flex-row items-center gap-3">
-                  <View className="w-9 h-9 rounded-full bg-slate-100 items-center justify-center">
-                    <MapPin size={16} color="#64748B" />
-                  </View>
-                  <View>
-                    <Text
-                      className={`text-sm ${
-                        isSelected ? 'font-bold text-brand' : 'font-medium text-slate-800'
-                      }`}
-                    >
-                      {loc.name}
-                    </Text>
-                    <Text className="text-xs text-slate-400">
-                      {loc.count} gym{loc.count > 1 ? 's' : ''} available
-                    </Text>
-                  </View>
+        <View
+          style={[softShadow, { borderRadius: 20 }]}
+          className="bg-white border border-black/[0.04]"
+        >
+          <View style={{ borderRadius: 20, overflow: 'hidden' }}>
+            {/* Use My Current Location */}
+            <Pressable
+              onPress={handleUseCurrentLocation}
+              className="w-full px-4 py-3.5 flex-row items-center justify-between active:bg-blue-50/50 border-b border-slate-100"
+            >
+              <View className="flex-row items-center gap-3">
+                <View className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
+                  <Navigation size={16} color="#2563EB" />
                 </View>
+                <View>
+                  <Text className="text-sm font-semibold text-brand">
+                    Use my current location
+                  </Text>
+                  <Text className="text-xs text-slate-400">
+                    Detects nearby gyms (Model Town, Ludhiana)
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
 
-                {isSelected && <Check size={18} color="#2563EB" />}
-              </Pressable>
-            )
-          })}
+            {/* Localities List */}
+            {filteredLocalities.map((loc, idx) => {
+              const isSelected = selectedLocality.id === loc.id
+              return (
+                <Pressable
+                  key={loc.id}
+                  onPress={() => handleSelect(loc.id)}
+                  className={`w-full px-4 py-3.5 flex-row items-center justify-between active:bg-slate-50 ${
+                    idx > 0 ? 'border-t border-slate-100' : ''
+                  }`}
+                >
+                  <View className="flex-row items-center gap-3">
+                    <View className="w-9 h-9 rounded-full bg-slate-100 items-center justify-center">
+                      <MapPin size={16} color="#64748B" />
+                    </View>
+                    <View>
+                      <Text
+                        className={`text-sm ${
+                          isSelected ? 'font-bold text-brand' : 'font-medium text-slate-800'
+                        }`}
+                      >
+                        {loc.name}
+                      </Text>
+                      <Text className="text-xs text-slate-400">
+                        {loc.count} gym{loc.count > 1 ? 's' : ''} available
+                      </Text>
+                    </View>
+                  </View>
+
+                  {isSelected && <Check size={18} color="#2563EB" />}
+                </Pressable>
+              )
+            })}
+          </View>
         </View>
       </View>
     </ScrollView>
