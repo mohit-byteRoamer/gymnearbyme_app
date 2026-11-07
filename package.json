@@ -6,8 +6,8 @@
     "start": "expo start",
     "dev": "expo start --web",
     "web": "expo start --web",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "build": "expo export -p web",
     "tunnel": "expo start --tunnel ngrok",
     "test": "jest"

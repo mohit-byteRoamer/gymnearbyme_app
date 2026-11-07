@@ -14,15 +14,11 @@ import { DevStateProvider } from '../src/context/DevStateContext'
 import { ToastProvider } from '../src/context/ToastContext'
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts(
-    Platform.OS === 'web'
-      ? {}
-      : {
-          Roboto: Roboto_400Regular,
-          'Roboto-Medium': Roboto_500Medium,
-          'Roboto-Bold': Roboto_700Bold,
-        }
-  )
+  const [fontsLoaded] = useFonts({
+    Roboto: Roboto_400Regular,
+    'Roboto-Medium': Roboto_500Medium,
+    'Roboto-Bold': Roboto_700Bold,
+  })
 
   if (!fontsLoaded && Platform.OS !== 'web') {
     return (
