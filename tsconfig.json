@@ -3,6 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "module": "esnext",
+    "ignoreDeprecations": "6.0",
+    "types": ["jest"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
