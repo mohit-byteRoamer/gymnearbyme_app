@@ -2,25 +2,33 @@
 
 Universal cross-platform application for GymApp marketplace discovery, search engine optimization (SEO), transparent pricing comparison, and online pass checkout. Runs on **Web**, **Android**, and **iOS** from a single codebase with an adaptive UI.
 
-Built with **Expo SDK 52**, **React Native 0.76**, **Expo Router v4**, **NativeWind v4**, **Zustand**, and **TypeScript**.
+Built with **Expo SDK 58**, **React Native 0.88**, **React 19**, **Expo Router v4**, **NativeWind v4**, **Zustand**, and **TypeScript**.
 
 ## Prerequisites
 - Node.js >= 18.0.0
 - npm >= 9.0.0
-- Expo Go / Android Studio / Xcode (optional for native simulators)
+- Expo Go (SDK 58) / Android Studio / Xcode
 
 ## Quick Start
 ```bash
 # Navigate to this folder
 cd apps/web
 
-# Install dependencies
-npm install --legacy-peer-deps
+# Start development server on local network (standard LAN mode)
+npx expo start
 
-# Start local web development server
+# If on different networks or cellular data (Ngrok tunnel)
+npm run tunnel
+# or: npx expo start --tunnel ngrok
+
+# If using Expo Cloud Tunnel (requires free Expo login)
+npx expo login
+npx expo start --tunnel
+
+# Start local web development in browser
 npm run web
 
-# Start on Android emulator or connected device
+# Start on Android emulator or connected device via ADB
 npm run android
 
 # Start on iOS simulator
