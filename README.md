@@ -1,37 +1,57 @@
-# GymApp — Public Web & Discovery Portal
+# GymApp — Universal Discovery & Pass Portal (Web, Android, iOS)
 
-Standalone web application for GymApp marketplace discovery, search engine optimization (SEO), transparent pricing comparison, and online pass checkout.
+Universal cross-platform application for GymApp marketplace discovery, search engine optimization (SEO), transparent pricing comparison, and online pass checkout. Runs on **Web**, **Android**, and **iOS** from a single codebase with an adaptive UI.
 
-Built with **React 19**, **Vite**, **Tailwind CSS**, and **Zustand**.
+Built with **Expo SDK 52**, **React Native 0.76**, **Expo Router v4**, **NativeWind v4**, **Zustand**, and **TypeScript**.
 
 ## Prerequisites
 - Node.js >= 18.0.0
 - npm >= 9.0.0
+- Expo Go / Android Studio / Xcode (optional for native simulators)
 
 ## Quick Start
 ```bash
 # Navigate to this folder
 cd apps/web
 
-# Install dependencies (standalone)
-npm install
+# Install dependencies
+npm install --legacy-peer-deps
 
-# Start local development server (port 5175)
-npm run dev
+# Start local web development server
+npm run web
 
-# Run automated unit tests
-npm test
+# Start on Android emulator or connected device
+npm run android
 
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+# Start on iOS simulator
+npm run ios
 ```
 
-## Key Capabilities
-- **Locality Search**: Fast autocomplete across Model Town, Sarabha Nagar, BRS Nagar, Civil Lines, Dugri, Pakhowal Road.
-- **Gym Profiles**: High-resolution facility photography, equipment breakdown, and interactive Leaflet map.
-- **Pass Checkout**: Frictionless one-page checkout with UPI integration.
-- **Account Management**: Pass wallet, pre-activation refunds, and order history.
+## Running Tests & Verification
+```bash
+# Run unit tests via Jest-Expo
+npm test
 
+# Run TypeScript compiler check
+npx tsc --noEmit
+```
+
+## Production Builds & Export
+```bash
+# Export static web build into dist/
+npm run build
+# or: npx expo export -p web
+
+# Export native bundles
+npx expo export -p android
+npx expo export -p ios
+
+# Build cloud binaries using EAS Build
+eas build --platform android --profile preview
+eas build --platform ios --profile preview
+```
+
+## Adaptive UI Architecture
+- **Phone (`< 768px`)**: Bottom tab bar, 1-column gym cards, full-width search, 44px+ touch targets, modal bottom sheets.
+- **Tablet (`768px - 1199px`)**: 2-column gym grid, responsive top/side navigation bar.
+- **Desktop (`>= 1200px`)**: 3-column gym grid, top navigation header with user avatar, max-w-7xl centered container, sticky desktop pricing card.

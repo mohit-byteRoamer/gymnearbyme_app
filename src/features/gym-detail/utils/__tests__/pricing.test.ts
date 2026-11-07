@@ -1,11 +1,10 @@
-import { describe, it, expect } from 'vitest'
 import {
   formatINR,
   calculatePerDay,
   calculatePerMonth,
   calculateSavings,
   getLiveOpenStatus,
-} from '../pricing.ts'
+} from '../pricing'
 
 describe('Gym Pricing Utilities', () => {
   it('formats INR correctly', () => {
@@ -52,4 +51,3 @@ describe('Gym Pricing Utilities', () => {
     expect(status).toHaveProperty('statusColor')
   })
 })
-

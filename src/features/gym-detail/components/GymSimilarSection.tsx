@@ -1,84 +1,83 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { MapPin, Star, Sparkles, ChevronRight } from 'lucide-react'
-import { SIMILAR_GYMS } from '../api/gymApi.ts'
-import { formatINR } from '../utils/pricing.ts'
+import { View, Text, ScrollView, Pressable } from 'react-native'
+import { Image } from 'expo-image'
+import { useRouter } from 'expo-router'
+import { MapPin, Star, Sparkles, ChevronRight } from 'lucide-react-native'
+import { SIMILAR_GYMS } from '../api/gymApi'
+import { formatINR } from '../utils/pricing'
 
 export function GymSimilarSection() {
-  const navigate = useNavigate()
+  const router = useRouter()
 
   return (
-    <section className="space-y-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-brand" />
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+    <View className="gap-4 pt-6 border-t border-slate-200">
+      <View className="flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <Sparkles size={20} color="#2563EB" />
+          <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             Similar Gyms Nearby
-          </h2>
-        </div>
-        <button
-          onClick={() => navigate('/home')}
-          className="text-xs font-semibold text-brand hover:underline flex items-center gap-1"
+          </Text>
+        </View>
+        <Pressable
+          onPress={() => router.push('/home' as any)}
+          className="flex-row items-center gap-1 active:opacity-75"
         >
-          <span>View all in Ludhiana</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
+          <Text className="text-xs font-semibold text-brand">View all in Ludhiana</Text>
+          <ChevronRight size={14} color="#2563EB" />
+        </Pressable>
+      </View>
 
-      <div className="flex gap-4 overflow-x-auto pb-3 no-scrollbar -mx-4 px-4 sm:-mx-0 sm:px-0">
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: 16, paddingRight: 16 }}
+      >
         {SIMILAR_GYMS.map((gym) => (
-          <div
+          <Pressable
             key={gym.id}
-            onClick={() => {
-              navigate(`/gym/${gym.id}`)
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-            className="w-64 sm:w-72 shrink-0 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 shadow-subtle hover:shadow-card hover:border-brand/40 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col group active:scale-[0.99]"
+            onPress={() => router.push(`/gym/${gym.id}` as any)}
+            className="w-64 sm:w-72 bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden flex-col active:scale-[0.99]"
           >
-            <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
-              <img
-                src={gym.coverPhoto}
-                alt={gym.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                loading="lazy"
+            <View className="relative aspect-[16/10] w-full bg-slate-100">
+              <Image
+                source={{ uri: gym.coverPhoto }}
+                contentFit="cover"
+                className="w-full h-full"
               />
               {gym.isFeatured && (
-                <div className="absolute top-2.5 left-2.5 bg-brand text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow">
-                  Featured
-                </div>
+                <View className="absolute top-2.5 left-2.5 bg-brand px-2 py-0.5 rounded-full shadow">
+                  <Text className="text-white text-[10px] font-bold">Featured</Text>
+                </View>
               )}
-            </div>
+            </View>
 
-            <div className="p-4 flex-1 flex flex-col justify-between">
-              <div>
-                <div className="flex items-start justify-between gap-1 mb-1">
-                  <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm group-hover:text-brand transition-colors line-clamp-1">
+            <View className="p-4 gap-2 flex-1 justify-between">
+              <View>
+                <View className="flex-row items-start justify-between gap-1 mb-1">
+                  <Text numberOfLines={1} className="font-bold text-slate-900 text-sm flex-1">
                     {gym.name}
-                  </h3>
-                  <div className="flex items-center gap-0.5 text-xs font-bold text-amber-500 shrink-0">
-                    <Star className="w-3.5 h-3.5 fill-current" />
-                    <span>{gym.rating}</span>
-                  </div>
-                </div>
+                  </Text>
+                  <View className="flex-row items-center gap-0.5">
+                    <Star size={12} color="#F59E0B" fill="#F59E0B" />
+                    <Text className="text-xs font-bold text-amber-500">{gym.rating}</Text>
+                  </View>
+                </View>
+                <View className="flex-row items-center gap-1">
+                  <MapPin size={12} color="#94A3B8" />
+                  <Text className="text-xs text-slate-500">{gym.locality} ({gym.distance})</Text>
+                </View>
+              </View>
 
-                <div className="flex items-center gap-1 text-xs text-slate-500">
-                  <MapPin className="w-3.5 h-3.5 text-brand shrink-0" />
-                  <span>{gym.distance} · {gym.locality}</span>
-                </div>
-              </div>
-
-              <div className="pt-3 mt-2 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs">
-                <span className="text-slate-400">From</span>
-                <span className="font-extrabold text-slate-900 dark:text-slate-100 text-sm">
+              <View className="flex-row items-baseline gap-1 pt-2 border-t border-slate-100">
+                <Text className="text-sm font-extrabold text-slate-900">
                   {formatINR(gym.minPrice)}
-                  <span className="text-slate-400 font-normal text-[11px]">/mo</span>
-                </span>
-              </div>
-            </div>
-          </div>
+                </Text>
+                <Text className="text-[11px] text-slate-500">/month</Text>
+              </View>
+            </View>
+          </Pressable>
         ))}
-      </div>
-    </section>
+      </ScrollView>
+    </View>
   )
 }
-

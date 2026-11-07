@@ -1,22 +1,31 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X, Check, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react'
-import { Gym, Plan } from '../types/index.ts'
+import React from 'react'
+import {
+  Modal,
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+} from 'react-native'
+import { useRouter } from 'expo-router'
+import { X, Check, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Gym, Plan } from '../types/index'
 import {
   formatINR,
   calculatePerDay,
   calculateSavings,
-} from '../utils/pricing.ts'
-import { useGymDetailStore } from '../store/gymDetailStore.ts'
-import { useToast } from '../../../context/ToastContext.jsx'
+} from '../utils/pricing'
+import { useGymDetailStore } from '../store/gymDetailStore'
+import { useToast } from '@/context/ToastContext'
+import { Button } from '@/components/common/Button'
 
 interface Props {
   gym: Gym
 }
 
 export function GymMobilePlanSheet({ gym }: Props) {
-  const navigate = useNavigate()
+  const router = useRouter()
+  const insets = useSafeAreaInsets()
   const { showToast } = useToast()
   const {
     isMobileSheetOpen,
@@ -34,169 +43,137 @@ export function GymMobilePlanSheet({ gym }: Props) {
     plans.find((p) => p.isRecommended) ||
     plans[0]
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsMobileSheetOpen(false)
-    }
-    if (isMobileSheetOpen) {
-      window.addEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'hidden'
-    }
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'unset'
-    }
-  }, [isMobileSheetOpen, setIsMobileSheetOpen])
-
   const handleCheckout = () => {
     if (!gym.acceptsOnlineJoining) {
       showToast('This gym is not accepting online joins right now.', 'warning')
       return
     }
     setIsMobileSheetOpen(false)
-    navigate(`/checkout?gym=${gym.id}&plan=${activePlan.id}`)
+    router.push({
+      pathname: '/checkout',
+      params: { gym: gym.id, plan: activePlan.id },
+    } as any)
   }
 
+  if (!isMobileSheetOpen) return null
+
   return (
-    <AnimatePresence>
-      {isMobileSheetOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end">
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsMobileSheetOpen(false)}
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs"
-          />
+    <Modal
+      visible={isMobileSheetOpen}
+      transparent
+      animationType="slide"
+      onRequestClose={() => setIsMobileSheetOpen(false)}
+    >
+      <View className="flex-1 bg-black/60 justify-end">
+        <View
+          className="w-full bg-white rounded-t-3xl shadow-2xl max-h-[85%] flex-col"
+          style={{ paddingBottom: Math.max(insets.bottom, 16) }}
+        >
+          {/* Drag Handle */}
+          <View className="items-center pt-3 pb-1">
+            <View className="w-10 h-1.5 bg-slate-200 rounded-full" />
+          </View>
 
-          {/* Bottom Sheet Drawer */}
-          <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-            className="relative z-10 bg-white dark:bg-slate-900 rounded-t-3xl border-t border-slate-200 dark:border-slate-800 shadow-2xl max-h-[85vh] flex flex-col overflow-hidden pb-safe"
-          >
-            {/* Grab Handle & Header */}
-            <div className="p-4 border-b border-slate-100 dark:border-slate-800 text-center relative shrink-0">
-              <div className="w-12 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700 mx-auto mb-2" />
-              <div className="flex items-center justify-between px-2">
-                <div className="text-left">
-                  <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
-                    Choose Membership Plan
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    Pay online once. Activate with QR voucher at gym.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsMobileSheetOpen(false)}
-                  className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-900"
+          {/* Header */}
+          <View className="flex-row items-center justify-between px-5 py-3 border-b border-slate-100">
+            <View>
+              <Text className="text-base font-extrabold text-slate-900">
+                Select Membership Pass
+              </Text>
+              <Text className="text-xs text-slate-500">
+                {gym.name}
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => setIsMobileSheetOpen(false)}
+              className="p-1.5 rounded-full active:bg-slate-100"
+            >
+              <X size={20} color="#64748B" />
+            </Pressable>
+          </View>
+
+          {/* Scrollable Plan Cards */}
+          <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
+            {plans.map((p) => {
+              const isSelected = p.id === activePlan.id
+              const perDay = calculatePerDay(p.price, p.durationDays)
+              const savings = calculateSavings(p.price, p.durationDays, baseMonthlyPrice)
+
+              return (
+                <Pressable
+                  key={p.id}
+                  onPress={() => setSelectedPlanId(p.id)}
+                  className={`p-4 rounded-2xl border ${
+                    isSelected
+                      ? 'border-brand bg-blue-50/40 shadow-xs'
+                      : 'border-slate-200/90 bg-white'
+                  }`}
                 >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+                  <View className="flex-row items-center justify-between mb-1.5">
+                    <View className="flex-row items-center gap-2">
+                      <Text className="font-extrabold text-slate-900 text-sm">
+                        {p.name}
+                      </Text>
+                      {p.isRecommended && (
+                        <View className="bg-amber-400 px-2 py-0.5 rounded-full">
+                          <Text className="text-[10px] font-extrabold text-amber-900">
+                            Best value
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    <Text className="font-extrabold text-slate-900 text-base">
+                      {formatINR(p.price)}
+                    </Text>
+                  </View>
 
-            {/* Scrollable Plan Radio Cards */}
-            <div className="p-4 overflow-y-auto space-y-3 flex-1">
-              {plans.map((p) => {
-                const isSelected = p.id === activePlan.id
-                const perDay = calculatePerDay(p.price, p.durationDays)
-                const savings = calculateSavings(
-                  p.price,
-                  p.durationDays,
-                  baseMonthlyPrice
-                )
-
-                return (
-                  <div
-                    key={p.id}
-                    onClick={() => setSelectedPlanId(p.id)}
-                    className={`p-4 rounded-2xl border transition cursor-pointer select-none relative ${
-                      isSelected
-                        ? 'border-brand bg-brand-50/50 dark:bg-brand-950/40 ring-2 ring-brand'
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-850 hover:border-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-extrabold text-slate-900 dark:text-slate-100 text-sm">
-                            {p.name}
-                          </span>
-                          {p.isRecommended && (
-                            <span className="text-[10px] font-extrabold text-amber-900 bg-amber-400 px-2 py-0.5 rounded-full">
-                              Best Value
-                            </span>
-                          )}
-                          {savings.amount > 0 && !p.isRecommended && (
-                            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">
-                              Save {formatINR(savings.amount)}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex items-baseline gap-2 mt-1">
-                          <span className="text-xl font-black text-slate-900 dark:text-slate-100">
-                            {formatINR(p.price)}
-                          </span>
-                          <span className="text-xs font-semibold text-brand">
-                            ₹{perDay}/day
-                          </span>
-                          <span className="text-xs text-slate-400">
-                            ({p.durationDays} days)
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Custom Radio Circle */}
-                      <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center border transition shrink-0 mt-0.5 ${
-                          isSelected
-                            ? 'border-brand bg-brand text-white'
-                            : 'border-slate-300 dark:border-slate-600'
-                        }`}
-                      >
-                        {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                      </div>
-                    </div>
-
-                    {/* Features snippet for selected plan */}
-                    {isSelected && (
-                      <div className="mt-3 pt-2.5 border-t border-brand-100 dark:border-slate-700 space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-                        {p.features.map((feat, i) => (
-                          <div key={i} className="flex items-center gap-1.5">
-                            <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                            <span>{feat}</span>
-                          </div>
-                        ))}
-                      </div>
+                  <View className="flex-row items-center justify-between text-xs">
+                    <Text className="text-xs text-slate-500">
+                      ₹{perDay}/day · {p.durationDays} days access
+                    </Text>
+                    {savings.amount > 0 && (
+                      <Text className="text-xs font-bold text-emerald-600">
+                        Save {savings.percent}%
+                      </Text>
                     )}
-                  </div>
-                )
-              })}
-            </div>
+                  </View>
 
-            {/* Pinned Bottom CTA */}
-            <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 space-y-2">
-              <button
-                onClick={handleCheckout}
-                className="w-full h-12 rounded-2xl bg-brand hover:bg-brand-700 text-white font-extrabold text-base transition flex items-center justify-center gap-2 shadow-md active:scale-98"
-              >
-                <span>Continue · {formatINR(activePlan.price)}</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+                  {/* Features */}
+                  {isSelected && (
+                    <View className="gap-1 mt-3 pt-3 border-t border-blue-100">
+                      {p.features?.map((f, i) => (
+                        <View key={i} className="flex-row items-center gap-1.5">
+                          <Check size={12} color="#059669" />
+                          <Text className="text-xs text-slate-700">{f}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+                </Pressable>
+              )
+            })}
+          </ScrollView>
 
-              <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                <span>100% Safe Online Booking · Instant QR Activation</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+          {/* Checkout CTA */}
+          <View className="px-5 pt-3 border-t border-slate-100 gap-2">
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              onPress={handleCheckout}
+              icon={ArrowRight}
+            >
+              Proceed to Pay {formatINR(activePlan.price)}
+            </Button>
+            <View className="flex-row items-center justify-center gap-1.5">
+              <ShieldCheck size={14} color="#059669" />
+              <Text className="text-[11px] text-slate-500">
+                100% money back before turnstile scan
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </Modal>
   )
 }

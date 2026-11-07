@@ -1,0 +1,230 @@
+import React, { useState } from 'react'
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  TextInput,
+  Alert,
+  Platform,
+} from 'react-native'
+import { Image } from 'expo-image'
+import { useRouter } from 'expo-router'
+import {
+  ChevronRight,
+  HelpCircle,
+  FileText,
+  Shield,
+  RotateCcw,
+  LogOut,
+  Trash2,
+  Edit2,
+  Check,
+} from 'lucide-react-native'
+import { useAuth } from '../../src/context/AuthContext'
+import { useToast } from '../../src/context/ToastContext'
+import { storage } from '../../src/utils/storage'
+import { useBreakpoint } from '../../src/hooks/useBreakpoint'
+
+export default function ProfileScreen() {
+  const { user, signOut, updatePhone } = useAuth()
+  const { showToast } = useToast()
+  const router = useRouter()
+  const { isPhone } = useBreakpoint()
+
+  const [isEditingPhone, setIsEditingPhone] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone || '+919876543210')
+
+  const handleSavePhone = () => {
+    updatePhone(phoneNumber)
+    setIsEditingPhone(false)
+    showToast('Phone number updated successfully', 'info')
+  }
+
+  const handleLogout = () => {
+    signOut()
+    router.replace('/login' as any)
+  }
+
+  const handleDeleteAccount = () => {
+    const executeDelete = async () => {
+      signOut()
+      await storage.clear()
+      showToast('Account data cleared successfully', 'info')
+      router.replace('/login' as any)
+    }
+
+    if (Platform.OS === 'web') {
+      if (typeof window !== 'undefined' && window.confirm('Are you sure you want to delete your demo account and personal data?')) {
+        executeDelete()
+      }
+    } else {
+      Alert.alert(
+        'Delete Account',
+        'Are you sure you want to delete your demo account and personal data?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', style: 'destructive', onPress: executeDelete },
+        ]
+      )
+    }
+  }
+
+  const navRows = [
+    {
+      label: 'Help and support',
+      icon: HelpCircle,
+      action: () => {
+        if (Platform.OS === 'web') {
+          alert('Support: Email help@gymapp.in or call 1800-120-GYM (Ludhiana)')
+        } else {
+          Alert.alert('Help & Support', 'Email: help@gymapp.in\nPhone: 1800-120-GYM (Ludhiana)')
+        }
+      },
+    },
+    {
+      label: 'Terms of service',
+      icon: FileText,
+      action: () => {
+        if (Platform.OS === 'web') {
+          alert('GymApp Terms: Valid across participating gym clubs in Ludhiana.')
+        } else {
+          Alert.alert('Terms of Service', 'GymApp passes are valid across all participating gym clubs in Ludhiana.')
+        }
+      },
+    },
+    {
+      label: 'Privacy policy',
+      icon: Shield,
+      action: () => {
+        if (Platform.OS === 'web') {
+          alert('Privacy Policy: We protect your phone and payment identifiers securely.')
+        } else {
+          Alert.alert('Privacy Policy', 'We protect your phone and payment identifiers securely.')
+        }
+      },
+    },
+    {
+      label: 'Refund policy',
+      icon: RotateCcw,
+      action: () => {
+        if (Platform.OS === 'web') {
+          alert('Refund Policy: 100% money back before QR voucher scanning at the gym.')
+        } else {
+          Alert.alert('Refund Policy', '100% money back before QR voucher scanning at the gym.')
+        }
+      },
+    },
+  ]
+
+  return (
+    <ScrollView
+      className="flex-1 bg-slate-50"
+      contentContainerStyle={{ paddingBottom: isPhone ? 96 : 40 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="max-w-form w-full mx-auto px-4 py-4 sm:py-6 gap-6">
+        <Text className="text-2xl font-bold text-slate-900 tracking-tight">
+          Profile
+        </Text>
+
+        {/* User Info Card */}
+        <View className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm items-center gap-3">
+          <View className="w-20 h-20 rounded-full bg-slate-100 overflow-hidden items-center justify-center border-4 border-slate-50 shadow-xs">
+            {user?.avatar ? (
+              <Image source={{ uri: user.avatar }} className="w-full h-full" />
+            ) : (
+              <Text className="text-2xl font-bold text-brand">
+                {user?.name?.[0] || 'A'}
+              </Text>
+            )}
+          </View>
+
+          <View className="items-center">
+            <Text className="text-lg font-bold text-slate-900">
+              {user?.name || 'Amritpal Singh'}
+            </Text>
+            <Text className="text-xs text-slate-400">
+              {user?.email || 'amrit.singh@gmail.com'}
+            </Text>
+          </View>
+
+          {/* Phone */}
+          <View className="pt-2 border-t border-slate-100 w-full flex-row items-center justify-center gap-2">
+            {isEditingPhone ? (
+              <View className="flex-row items-center gap-2">
+                <TextInput
+                  value={phoneNumber}
+                  onChangeText={setPhoneNumber}
+                  className="border border-brand rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium w-36 bg-blue-50/30"
+                  autoFocus
+                />
+                <Pressable
+                  onPress={handleSavePhone}
+                  className="p-1.5 rounded-lg bg-brand text-white active:bg-blue-700"
+                >
+                  <Check size={14} color="#FFFFFF" />
+                </Pressable>
+              </View>
+            ) : (
+              <Pressable
+                onPress={() => setIsEditingPhone(true)}
+                className="flex-row items-center gap-1.5 py-1 px-2.5 rounded-lg active:bg-slate-50"
+              >
+                <Text className="text-xs text-slate-600 font-medium">
+                  {user?.phone || '+919876543210'}
+                </Text>
+                <Edit2 size={12} color="#94A3B8" />
+              </Pressable>
+            )}
+          </View>
+        </View>
+
+        {/* Action Menu List */}
+        <View className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+          {navRows.map((row, idx) => {
+            const Icon = row.icon
+            return (
+              <Pressable
+                key={row.label}
+                onPress={row.action}
+                className={`p-4 flex-row items-center justify-between active:bg-slate-50 ${
+                  idx > 0 ? 'border-t border-slate-100' : ''
+                }`}
+              >
+                <View className="flex-row items-center gap-3">
+                  <Icon size={18} color="#64748B" />
+                  <Text className="text-sm font-semibold text-slate-800">
+                    {row.label}
+                  </Text>
+                </View>
+                <ChevronRight size={16} color="#CBD5E1" />
+              </Pressable>
+            )
+          })}
+        </View>
+
+        {/* Logout and Delete Buttons */}
+        <View className="gap-2 pt-2">
+          <Pressable
+            onPress={handleLogout}
+            className="w-full py-3 px-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex-row items-center justify-center gap-2 active:bg-slate-50"
+          >
+            <LogOut size={16} color="#DC2626" />
+            <Text className="text-sm font-bold text-rose-600">Log out</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={handleDeleteAccount}
+            className="w-full py-3 px-4 flex-row items-center justify-center gap-2 active:opacity-70"
+          >
+            <Trash2 size={14} color="#94A3B8" />
+            <Text className="text-xs text-slate-400 font-medium">
+              Delete demo account
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    </ScrollView>
+  )
+}

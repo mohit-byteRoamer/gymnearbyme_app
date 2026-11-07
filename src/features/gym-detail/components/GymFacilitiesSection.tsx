@@ -1,4 +1,5 @@
 import React from 'react'
+import { View, Text } from 'react-native'
 import {
   Shield,
   Wind,
@@ -14,8 +15,8 @@ import {
   Waves,
   Check,
   X,
-} from 'lucide-react'
-import { Gym } from '../types/index.ts'
+} from 'lucide-react-native'
+import { Gym } from '../types/index'
 
 interface Props {
   gym: Gym
@@ -41,82 +42,84 @@ export function GymFacilitiesSection({ gym }: Props) {
   }
 
   return (
-    <section id="facilities-section" className="space-y-6 pt-4">
-      <div className="flex items-center gap-2">
-        <Shield className="w-5 h-5 text-brand" />
-        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+    <View className="gap-6 pt-4">
+      <View className="flex-row items-center gap-2">
+        <Shield size={20} color="#2563EB" />
+        <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
           Club Facilities & Amenities
-        </h2>
-      </div>
+        </Text>
+      </View>
 
-      <div className="space-y-6">
+      <View className="gap-6">
         {gym.facilitiesCategorized.map((cat, idx) => (
-          <div key={idx} className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          <View key={idx} className="gap-3">
+            <Text className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               {cat.category}
-            </h3>
+            </Text>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <View className="flex-row flex-wrap gap-3">
               {cat.items.map((item) => {
                 const IconComponent = ICON_MAP[item.icon] || Dumbbell
-                const isAvailable = item.available !== false
 
                 return (
-                  <div
+                  <View
                     key={item.id}
-                    className={`flex items-start gap-3 p-3.5 rounded-2xl border transition ${
-                      isAvailable
-                        ? 'bg-white dark:bg-slate-800/80 border-slate-200/90 dark:border-slate-700/80 shadow-2xs'
-                        : 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800 opacity-60'
-                    }`}
+                    className={`
+                      w-full sm:w-[48%] flex-row items-center justify-between p-3.5 rounded-2xl border
+                      ${
+                        item.available
+                          ? 'bg-white border-slate-200/90 shadow-2xs'
+                          : 'bg-slate-50/60 border-slate-200/50 opacity-60'
+                      }
+                    `}
                   >
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        isAvailable
-                          ? 'bg-brand-50 dark:bg-brand-950/60 text-brand'
-                          : 'bg-slate-200 dark:bg-slate-800 text-slate-400'
-                      }`}
-                    >
-                      <IconComponent className="w-5 h-5" />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <span
-                          className={`text-sm font-bold truncate ${
-                            isAvailable
-                              ? 'text-slate-900 dark:text-slate-100'
-                              : 'text-slate-500 line-through'
+                    <View className="flex-row items-center gap-3 flex-1 min-w-0 mr-2">
+                      <View
+                        className={`w-9 h-9 rounded-xl items-center justify-center ${
+                          item.available ? 'bg-blue-50 text-brand' : 'bg-slate-100 text-slate-400'
+                        }`}
+                      >
+                        <IconComponent
+                          size={18}
+                          color={item.available ? '#2563EB' : '#94A3B8'}
+                        />
+                      </View>
+                      <View className="flex-1 min-w-0">
+                        <Text
+                          numberOfLines={1}
+                          className={`text-sm font-bold ${
+                            item.available ? 'text-slate-900' : 'text-slate-400'
                           }`}
                         >
                           {item.name}
-                        </span>
-
-                        {isAvailable ? (
-                          <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] shrink-0 font-bold">
-                            <Check className="w-3 h-3 stroke-[2.5]" />
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-semibold text-slate-400 uppercase">
-                            N/A
-                          </span>
+                        </Text>
+                        {item.description && (
+                          <Text
+                            numberOfLines={1}
+                            className="text-xs text-slate-500 mt-0.5"
+                          >
+                            {item.description}
+                          </Text>
                         )}
-                      </div>
+                      </View>
+                    </View>
 
-                      {item.description && (
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
-                          {item.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                    {item.available ? (
+                      <View className="w-5 h-5 rounded-full bg-emerald-50 items-center justify-center">
+                        <Check size={12} color="#059669" />
+                      </View>
+                    ) : (
+                      <View className="w-5 h-5 rounded-full bg-slate-100 items-center justify-center">
+                        <X size={12} color="#94A3B8" />
+                      </View>
+                    )}
+                  </View>
                 )
               })}
-            </div>
-          </div>
+            </View>
+          </View>
         ))}
-      </div>
-    </section>
+      </View>
+    </View>
   )
 }
-

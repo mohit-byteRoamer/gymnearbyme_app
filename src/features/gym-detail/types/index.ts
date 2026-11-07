@@ -56,8 +56,10 @@ export interface Review {
   avatar?: string
   rating: number
   date: string
-  text: string
-  isVerifiedMember: boolean
+  text?: string
+  comment?: string
+  likes?: number
+  isVerifiedMember?: boolean
   planType?: string
 }
 
@@ -117,6 +119,7 @@ export interface Gym {
   isFeatured: boolean
   acceptsOnlineJoining: boolean
   verified: boolean
+  hasFreeTrial?: boolean
   coverPhoto: string
   galleryPhotos: string[]
   videoThumbnails: VideoThumbnail[]

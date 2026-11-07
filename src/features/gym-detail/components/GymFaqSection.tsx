@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react'
-import { Gym } from '../types/index.ts'
+import { View, Text, Pressable } from 'react-native'
+import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react-native'
+import { Gym } from '../types/index'
 
 interface Props {
   gym: Gym
@@ -19,47 +20,50 @@ export function GymFaqSection({ gym }: Props) {
   if (faqs.length === 0) return null
 
   return (
-    <section id="faqs-section" className="space-y-4 pt-4">
-      <div className="flex items-center gap-2">
-        <HelpCircle className="w-5 h-5 text-brand" />
-        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+    <View className="gap-4 pt-4">
+      <View className="flex-row items-center gap-2">
+        <HelpCircle size={20} color="#2563EB" />
+        <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
           Frequently Asked Questions
-        </h2>
-      </div>
+        </Text>
+      </View>
 
-      <div className="space-y-2.5">
+      <View className="gap-2.5">
         {faqs.map((faq) => {
           const isOpen = openIds.includes(faq.id)
 
           return (
-            <div
+            <View
               key={faq.id}
-              className="rounded-2xl border border-slate-200/90 dark:border-slate-700/80 bg-white dark:bg-slate-800 overflow-hidden shadow-2xs transition"
+              className="rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-2xs"
             >
-              <button
-                onClick={() => toggle(faq.id)}
-                className="w-full flex items-center justify-between p-4 sm:p-5 text-left text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 hover:text-brand transition select-none"
+              <Pressable
+                onPress={() => toggle(faq.id)}
+                className="w-full flex-row items-center justify-between p-4 sm:p-5"
+                accessibilityRole="button"
+                accessibilityLabel={faq.question}
               >
-                <span>{faq.question}</span>
-                <span className="shrink-0 ml-3 text-slate-400">
-                  {isOpen ? (
-                    <ChevronUp className="w-5 h-5" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5" />
-                  )}
-                </span>
-              </button>
+                <Text className="text-sm sm:text-base font-bold text-slate-900 flex-1 mr-3">
+                  {faq.question}
+                </Text>
+                {isOpen ? (
+                  <ChevronUp size={18} color="#94A3B8" />
+                ) : (
+                  <ChevronDown size={18} color="#94A3B8" />
+                )}
+              </Pressable>
 
               {isOpen && (
-                <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-700/60 pt-3">
-                  {faq.answer}
-                </div>
+                <View className="px-4 pb-4 sm:px-5 sm:pb-5 border-t border-slate-100 pt-3">
+                  <Text className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    {faq.answer}
+                  </Text>
+                </View>
               )}
-            </div>
+            </View>
           )
         })}
-      </div>
-    </section>
+      </View>
+    </View>
   )
 }
-

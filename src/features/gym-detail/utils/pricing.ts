@@ -1,4 +1,4 @@
-import { TimingSchedule } from '../types/index.ts'
+import { TimingSchedule } from '../types/index'
 
 /**
  * Format amounts into Indian Rupee format (₹1,000)

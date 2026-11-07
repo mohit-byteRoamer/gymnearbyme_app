@@ -1,5 +1,5 @@
-import { Gym, SimilarGym } from '../types/index.ts'
-import { GYMS } from '../../../data/gyms.js'
+import { Gym, SimilarGym } from '../types/index'
+import { GYMS } from '../../../data/gyms'
 
 export const CULT_FIT_DETAILED: Gym = {
   id: 'cult-fit-sarabha',

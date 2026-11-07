@@ -1,4 +1,5 @@
 import React from 'react'
+import { View, Text, Pressable, Linking, Share } from 'react-native'
 import {
   Star,
   MapPin,
@@ -7,10 +8,11 @@ import {
   Navigation,
   MessageCircle,
   Share2,
-} from 'lucide-react'
-import { Gym } from '../types/index.ts'
-import { getLiveOpenStatus } from '../utils/pricing.ts'
-import { useToast } from '../../../context/ToastContext.jsx'
+} from 'lucide-react-native'
+import * as Clipboard from 'expo-clipboard'
+import { Gym } from '../types/index'
+import { getLiveOpenStatus } from '../utils/pricing'
+import { useToast } from '@/context/ToastContext'
 
 interface Props {
   gym: Gym
@@ -20,20 +22,13 @@ export function GymHeaderBlock({ gym }: Props) {
   const { showToast } = useToast()
   const liveStatus = getLiveOpenStatus(gym.timingsSchedule)
 
-  const scrollToReviews = () => {
-    const el = document.getElementById('reviews-section')
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
-
   const handleDirections = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${gym.lat},${gym.lng}`
-    window.open(url, '_blank', 'noopener,noreferrer')
+    Linking.openURL(url)
   }
 
   const handleCall = () => {
-    window.location.href = `tel:${gym.phone}`
+    Linking.openURL(`tel:${gym.phone}`)
   }
 
   const handleWhatsApp = () => {
@@ -41,143 +36,106 @@ export function GymHeaderBlock({ gym }: Props) {
     const msg = encodeURIComponent(
       `Hi, I found ${gym.name} on GymApp Ludhiana and would like to know more about trial passes.`
     )
-    window.open(`https://wa.me/${cleanNumber}?text=${msg}`, '_blank')
+    Linking.openURL(`https://wa.me/${cleanNumber}?text=${msg}`)
   }
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: gym.name,
-          text: `Check out ${gym.name} on GymApp!`,
-          url: window.location.href,
-        })
-        return
-      } catch {}
+    try {
+      await Share.share({
+        title: gym.name,
+        message: `Check out ${gym.name} on GymApp Ludhiana!`,
+      })
+    } catch {
+      await Clipboard.setStringAsync(gym.name)
+      showToast('Gym details copied to clipboard!', 'success')
     }
-    await navigator.clipboard.writeText(window.location.href)
-    showToast('Link copied to clipboard!', 'success')
   }
 
   return (
-    <div className="space-y-4 pt-1">
+    <View className="gap-4 pt-1">
       {/* Title & Verified Badge */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-2 flex-wrap">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
+      <View className="gap-1">
+        <View className="flex-row items-center gap-2 flex-wrap">
+          <Text className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
             {gym.name}
-          </h1>
+          </Text>
           {gym.verified && (
-            <div
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-brand text-xs font-semibold"
-              title="Verified gym partner on GymApp"
-            >
-              <BadgeCheck className="w-4 h-4 fill-brand text-white" />
-              <span>Verified Partner</span>
-            </div>
+            <View className="flex-row items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200">
+              <BadgeCheck size={14} color="#2563EB" fill="#2563EB" />
+              <Text className="text-brand text-xs font-semibold">Verified Partner</Text>
+            </View>
           )}
-        </div>
+        </View>
         {gym.tagline && (
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-medium">
+          <Text className="text-sm sm:text-base text-slate-600 font-medium">
             {gym.tagline}
-          </p>
+          </Text>
         )}
-      </div>
+      </View>
 
       {/* Meta Row: Rating, Live Status, Location */}
-      <div className="flex items-center gap-3 flex-wrap text-sm">
-        {/* Rating Button (scrolls to reviews) */}
-        <button
-          onClick={scrollToReviews}
-          className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1 rounded-xl text-amber-900 dark:text-amber-200 font-bold border border-amber-200/80 dark:border-amber-800/60 hover:bg-amber-100 transition shadow-2xs"
-        >
-          <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-          <span>{gym.rating}</span>
-          <span className="font-normal text-amber-700 dark:text-amber-300 text-xs underline">
+      <View className="flex-row items-center gap-3 flex-wrap text-sm">
+        {/* Rating Pill */}
+        <View className="flex-row items-center gap-1.5 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200/80 shadow-xs">
+          <Star size={14} color="#F59E0B" fill="#F59E0B" />
+          <Text className="font-bold text-amber-900 text-xs">{gym.rating}</Text>
+          <Text className="font-normal text-amber-700 text-xs">
             ({gym.reviewsCount} reviews)
-          </span>
-        </button>
+          </Text>
+        </View>
 
-        {/* Live Open / Closed Status Pill */}
-        <div
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold border ${
-            liveStatus.statusColor === 'emerald'
-              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60'
-              : liveStatus.statusColor === 'amber'
-              ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800/60'
-              : 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/60'
-          }`}
-        >
-          <span
-            className={`w-2 h-2 rounded-full ${
-              liveStatus.isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'
-            }`}
-          />
-          <span>{liveStatus.statusText}</span>
-        </div>
+        {/* Live Open Status */}
+        <View className="flex-row items-center gap-1.5 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">
+          <View className="h-2 w-2 rounded-full bg-emerald-500" />
+          <Text className="text-xs font-semibold text-emerald-800">
+            {liveStatus.statusText}
+          </Text>
+        </View>
 
-        {/* Distance & Locality */}
-        <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400 font-medium text-xs sm:text-sm">
-          <MapPin className="w-4 h-4 text-brand shrink-0" />
-          <span className="font-bold text-slate-800 dark:text-slate-200">
-            {gym.distance}
-          </span>
-          <span>·</span>
-          <span>
+        {/* Locality */}
+        <View className="flex-row items-center gap-1">
+          <MapPin size={14} color="#64748B" />
+          <Text className="text-xs font-semibold text-slate-700">
             {gym.locality}, Ludhiana
-          </span>
-        </div>
-      </div>
+          </Text>
+          <Text className="text-xs text-slate-400">({gym.distance})</Text>
+        </View>
+      </View>
 
-      {/* Category Badges */}
-      {gym.categories && gym.categories.length > 0 && (
-        <div className="flex items-center gap-1.5 flex-wrap pt-1">
-          {gym.categories.map((cat) => (
-            <span
-              key={cat}
-              className="text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700"
-            >
-              {cat}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Primary Action Buttons: Call, Directions, WhatsApp, Share */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-        <button
-          onClick={handleCall}
-          className="flex items-center justify-center gap-2 h-11 px-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 font-semibold text-slate-800 dark:text-slate-200 hover:border-brand hover:text-brand transition shadow-2xs active:scale-95"
+      {/* Quick Action Buttons */}
+      <View className="flex-row items-center gap-2 flex-wrap pt-1">
+        <Pressable
+          onPress={handleDirections}
+          className="flex-row items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200/90 shadow-xs active:bg-slate-50"
         >
-          <Phone className="w-4 h-4 text-brand" />
-          <span>Call</span>
-        </button>
+          <Navigation size={14} color="#2563EB" />
+          <Text className="text-xs font-semibold text-slate-800">Directions</Text>
+        </Pressable>
 
-        <button
-          onClick={handleDirections}
-          className="flex items-center justify-center gap-2 h-11 px-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 font-semibold text-slate-800 dark:text-slate-200 hover:border-brand hover:text-brand transition shadow-2xs active:scale-95"
+        <Pressable
+          onPress={handleCall}
+          className="flex-row items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200/90 shadow-xs active:bg-slate-50"
         >
-          <Navigation className="w-4 h-4 text-brand" />
-          <span>Directions</span>
-        </button>
+          <Phone size={14} color="#059669" />
+          <Text className="text-xs font-semibold text-slate-800">Call</Text>
+        </Pressable>
 
-        <button
-          onClick={handleWhatsApp}
-          className="flex items-center justify-center gap-2 h-11 px-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition shadow-2xs active:scale-95"
+        <Pressable
+          onPress={handleWhatsApp}
+          className="flex-row items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200/90 shadow-xs active:bg-slate-50"
         >
-          <MessageCircle className="w-4 h-4 text-emerald-600" />
-          <span>WhatsApp</span>
-        </button>
+          <MessageCircle size={14} color="#16A34A" />
+          <Text className="text-xs font-semibold text-slate-800">WhatsApp</Text>
+        </Pressable>
 
-        <button
-          onClick={handleShare}
-          className="flex items-center justify-center gap-2 h-11 px-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 font-semibold text-slate-800 dark:text-slate-200 hover:border-brand hover:text-brand transition shadow-2xs active:scale-95"
+        <Pressable
+          onPress={handleShare}
+          className="flex-row items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-slate-200/90 shadow-xs active:bg-slate-50"
         >
-          <Share2 className="w-4 h-4 text-slate-500" />
-          <span>Share</span>
-        </button>
-      </div>
-    </div>
+          <Share2 size={14} color="#64748B" />
+          <Text className="text-xs font-semibold text-slate-800">Share</Text>
+        </Pressable>
+      </View>
+    </View>
   )
 }
-

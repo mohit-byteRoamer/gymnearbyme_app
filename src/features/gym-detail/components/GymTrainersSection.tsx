@@ -1,7 +1,9 @@
 import React from 'react'
-import { Dumbbell, Star, Award, ChevronRight } from 'lucide-react'
-import { Gym } from '../types/index.ts'
-import { useGymDetailStore } from '../store/gymDetailStore.ts'
+import { View, Text, ScrollView, Pressable } from 'react-native'
+import { Image } from 'expo-image'
+import { Dumbbell, Star, Award, ChevronRight } from 'lucide-react-native'
+import { Gym } from '../types/index'
+import { useGymDetailStore } from '../store/gymDetailStore'
 
 interface Props {
   gym: Gym
@@ -13,71 +15,75 @@ export function GymTrainersSection({ gym }: Props) {
   if (!gym.trainers || gym.trainers.length === 0) return null
 
   return (
-    <section id="trainers-section" className="space-y-4 pt-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Dumbbell className="w-5 h-5 text-brand" />
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+    <View className="gap-4 pt-4">
+      <View className="flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <Dumbbell size={20} color="#2563EB" />
+          <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             Certified Trainers ({gym.trainers.length})
-          </h2>
-        </div>
-        <span className="text-xs text-slate-400 font-medium hidden sm:inline">
-          Tap coach to view full bio & credentials
-        </span>
-      </div>
+          </Text>
+        </View>
+        <Text className="text-xs text-slate-400 font-medium hidden sm:flex">
+          Tap coach to view bio & credentials
+        </Text>
+      </View>
 
-      {/* Horizontal Scroll of Larger Rich Cards */}
-      <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar -mx-4 px-4 sm:-mx-0 sm:px-0">
+      {/* Horizontal Scroll */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: 16, paddingRight: 16 }}
+      >
         {gym.trainers.map((trainer) => (
-          <div
+          <Pressable
             key={trainer.id}
-            onClick={() => setSelectedTrainer(trainer)}
-            className="w-72 sm:w-80 shrink-0 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 p-4 shadow-subtle hover:shadow-card hover:border-brand/40 transition-all duration-300 cursor-pointer group flex flex-col justify-between active:scale-[0.99]"
+            onPress={() => setSelectedTrainer(trainer)}
+            className="w-72 sm:w-80 bg-white rounded-3xl border border-slate-200/90 p-4 shadow-sm active:scale-[0.99] flex-col justify-between"
           >
-            <div>
-              <div className="flex items-center gap-3.5 mb-3">
-                <img
-                  src={trainer.photo}
-                  alt={trainer.name}
-                  className="w-16 h-16 rounded-2xl object-cover ring-2 ring-brand/20 group-hover:ring-brand transition-all shrink-0 shadow-xs"
+            <View>
+              <View className="flex-row items-center gap-3.5 mb-3">
+                <Image
+                  source={{ uri: trainer.photo }}
+                  className="w-16 h-16 rounded-2xl"
+                  contentFit="cover"
                 />
-                <div className="min-w-0">
-                  <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-base leading-tight group-hover:text-brand transition-colors truncate">
+                <View className="flex-1 min-w-0">
+                  <Text numberOfLines={1} className="font-extrabold text-slate-900 text-base leading-tight">
                     {trainer.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5 font-medium">
+                  </Text>
+                  <Text numberOfLines={1} className="text-xs text-slate-500 font-medium mt-0.5">
                     {trainer.speciality}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex items-center gap-1 text-amber-500 font-bold text-xs">
-                      <Star className="w-3.5 h-3.5 fill-current" />
-                      <span>{trainer.rating}</span>
-                    </div>
-                    <span className="text-slate-300 dark:text-slate-600">·</span>
-                    <span className="text-[11px] text-slate-500 font-medium">
+                  </Text>
+                  <View className="flex-row items-center gap-2 mt-1">
+                    <View className="flex-row items-center gap-1">
+                      <Star size={12} color="#F59E0B" fill="#F59E0B" />
+                      <Text className="text-amber-500 font-bold text-xs">{trainer.rating}</Text>
+                    </View>
+                    <Text className="text-slate-300 text-xs">·</Text>
+                    <Text className="text-[11px] text-slate-500 font-medium">
                       {trainer.experienceYears} yrs exp
-                    </span>
-                  </div>
-                </div>
-              </div>
+                    </Text>
+                  </View>
+                </View>
+              </View>
 
-              {/* Top Certification Badge */}
-              {trainer.certifications?.[0] && (
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200/60 dark:border-slate-700">
-                  <Award className="w-3.5 h-3.5 text-brand shrink-0" />
-                  <span className="truncate">{trainer.certifications[0]}</span>
-                </div>
-              )}
-            </div>
+              <Text numberOfLines={2} className="text-xs text-slate-600 leading-relaxed mb-3">
+                {trainer.bio}
+              </Text>
+            </View>
 
-            <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs text-brand font-semibold">
-              <span>View credentials & bio</span>
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </div>
-          </div>
+            <View className="flex-row items-center justify-between pt-3 border-t border-slate-100">
+              <View className="flex-row items-center gap-1.5 flex-1 min-w-0 mr-2">
+                <Award size={14} color="#2563EB" />
+                <Text numberOfLines={1} className="text-[11px] font-semibold text-brand flex-1">
+                  {trainer.certifications?.[0] || 'Certified Master Trainer'}
+                </Text>
+              </View>
+              <ChevronRight size={14} color="#94A3B8" />
+            </View>
+          </Pressable>
         ))}
-      </div>
-    </section>
+      </ScrollView>
+    </View>
   )
 }
-

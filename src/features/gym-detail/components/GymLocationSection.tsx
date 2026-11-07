@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
+import { View, Text, Pressable, Linking } from 'react-native'
 import {
   MapPin,
-  Navigation,
   Copy,
   Check,
   Car,
   Compass,
   ExternalLink,
-} from 'lucide-react'
-import { Gym } from '../types/index.ts'
-import { LeafletMap } from '../../../components/gym/LeafletMap.jsx'
-import { useToast } from '../../../context/ToastContext.jsx'
+} from 'lucide-react-native'
+import * as Clipboard from 'expo-clipboard'
+import { Gym } from '../types/index'
+import { LeafletMap } from '@/components/gym/LeafletMap'
+import { useToast } from '@/context/ToastContext'
 
 interface Props {
   gym: Gym
@@ -21,7 +22,7 @@ export function GymLocationSection({ gym }: Props) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(gym.address)
+    await Clipboard.setStringAsync(gym.address)
     setCopied(true)
     showToast('Address copied to clipboard!', 'success')
     setTimeout(() => setCopied(false), 2000)
@@ -29,84 +30,86 @@ export function GymLocationSection({ gym }: Props) {
 
   const handleOpenMaps = () => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${gym.lat},${gym.lng}`
-    window.open(url, '_blank', 'noopener,noreferrer')
+    Linking.openURL(url)
   }
 
   return (
-    <section id="location-section" className="space-y-4 pt-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-brand" />
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+    <View className="gap-4 pt-4">
+      <View className="flex-row items-center justify-between">
+        <View className="flex-row items-center gap-2">
+          <MapPin size={20} color="#2563EB" />
+          <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             Location & Getting Here
-          </h2>
-        </div>
+          </Text>
+        </View>
 
-        <button
-          onClick={handleOpenMaps}
-          className="text-xs sm:text-sm font-semibold text-brand hover:underline inline-flex items-center gap-1"
+        <Pressable
+          onPress={handleOpenMaps}
+          className="flex-row items-center gap-1 active:opacity-75"
         >
-          <span>Open in Google Maps</span>
-          <ExternalLink className="w-3.5 h-3.5" />
-        </button>
-      </div>
+          <Text className="text-xs sm:text-sm font-semibold text-brand">
+            Open in Google Maps
+          </Text>
+          <ExternalLink size={14} color="#2563EB" />
+        </Pressable>
+      </View>
 
       {/* Address Card with Copy Button */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700/80 shadow-subtle space-y-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-2.5">
-            <MapPin className="w-5 h-5 text-brand shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug">
+      <View className="p-4 sm:p-5 rounded-3xl bg-white border border-slate-200/90 shadow-sm gap-3">
+        <View className="flex-row items-start justify-between gap-3">
+          <View className="flex-row items-start gap-2.5 flex-1">
+            <MapPin size={18} color="#2563EB" style={{ marginTop: 2 }} />
+            <View className="flex-1">
+              <Text className="text-sm font-bold text-slate-900 leading-snug">
                 {gym.address}
-              </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Approx. <strong>{gym.distance}</strong> from your selected location
-              </p>
-            </div>
-          </div>
+              </Text>
+              <Text className="text-xs text-slate-500 mt-1">
+                Approx. <Text className="font-bold text-slate-700">{gym.distance}</Text> from your selected location
+              </Text>
+            </View>
+          </View>
 
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700/60 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-semibold shrink-0 transition"
-            aria-label="Copy address"
+          <Pressable
+            onPress={handleCopy}
+            className="flex-row items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 active:bg-slate-200 shrink-0"
+            accessibilityRole="button"
+            accessibilityLabel="Copy address"
           >
             {copied ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Copied</span>
-              </>
+              <Check size={14} color="#059669" />
             ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                <span>Copy</span>
-              </>
+              <Copy size={14} color="#334155" />
             )}
-          </button>
-        </div>
+            <Text className="text-slate-700 text-xs font-semibold">
+              {copied ? 'Copied' : 'Copy'}
+            </Text>
+          </Pressable>
+        </View>
 
         {/* Landmarks & Parking Context */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/60 text-xs">
+        <View className="flex-row flex-wrap gap-2 pt-2 border-t border-slate-100">
           {gym.landmarks && (
-            <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-              <Compass className="w-4 h-4 text-brand shrink-0" />
-              <span>{gym.landmarks}</span>
-            </div>
+            <View className="flex-row items-center gap-2 flex-1 min-w-[200px]">
+              <Compass size={16} color="#2563EB" />
+              <Text className="text-xs text-slate-600">{gym.landmarks}</Text>
+            </View>
           )}
           {gym.parkingInfo && (
-            <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-              <Car className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>{gym.parkingInfo}</span>
-            </div>
+            <View className="flex-row items-center gap-2 flex-1 min-w-[200px]">
+              <Car size={16} color="#10B981" />
+              <Text className="text-xs text-slate-600">{gym.parkingInfo}</Text>
+            </View>
           )}
-        </div>
-      </div>
+        </View>
+      </View>
 
-      {/* Interactive Leaflet Map Preview */}
-      <div className="rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-700/80 shadow-md">
-        <LeafletMap lat={gym.lat} lng={gym.lng} gymName={gym.name} />
-      </div>
-    </section>
+      {/* Map */}
+      <LeafletMap
+        lat={gym.lat}
+        lng={gym.lng}
+        gymName={gym.name}
+        address={gym.address}
+      />
+    </View>
   )
 }
-
