@@ -19,6 +19,7 @@ import { GymCard } from '../../src/components/gym/GymCard'
 import { GymCardSkeleton } from '../../src/components/common/Skeleton'
 import { Input } from '../../src/components/common/Input'
 import { Button } from '../../src/components/common/Button'
+import { softShadow } from '../../src/theme/shadows'
 
 export default function HomeScreen() {
   const router = useRouter()
@@ -166,7 +167,10 @@ export default function HomeScreen() {
             ))}
           </View>
         ) : gyms.length === 0 ? (
-          <View className="bg-white rounded-2xl border border-slate-200/80 p-8 sm:p-12 items-center text-center shadow-sm max-w-md mx-auto my-6 w-full">
+          <View
+            style={[softShadow, { borderRadius: 16 }]}
+            className="bg-white border border-black/[0.04] p-8 sm:p-12 items-center text-center max-w-md mx-auto my-6 w-full"
+          >
             <View className="w-14 h-14 rounded-full bg-slate-100 items-center justify-center mb-4">
               <MapPin size={28} color="#94A3B8" />
             </View>

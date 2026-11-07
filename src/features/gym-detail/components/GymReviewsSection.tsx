@@ -4,6 +4,7 @@ import { Image } from 'expo-image'
 import { Star, ShieldCheck, ThumbsUp } from 'lucide-react-native'
 import { Gym, Review } from '../types/index'
 import { useGymDetailStore } from '../store/gymDetailStore'
+import { softShadow, softShadowSm } from '@/theme/shadows'
 
 interface Props {
   gym: Gym
@@ -32,14 +33,17 @@ export function GymReviewsSection({ gym }: Props) {
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <Star size={20} color="#F59E0B" fill="#F59E0B" />
-          <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          <Text className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Member Reviews ({gym.reviewsCount})
           </Text>
         </View>
       </View>
 
       {/* Breakdown Card */}
-      <View className="flex-col md:flex-row gap-6 p-5 sm:p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm items-center">
+      <View
+        style={[softShadow, { borderRadius: 24 }]}
+        className="flex-col md:flex-row gap-6 p-5 sm:p-6 bg-white border border-black/[0.04] items-center"
+      >
         {/* Big Score */}
         <View className="items-center md:items-start md:border-r border-slate-200 md:pr-6">
           <Text className="text-5xl font-black text-slate-900 tracking-tight leading-none">
@@ -89,7 +93,8 @@ export function GymReviewsSection({ gym }: Props) {
         {visibleReviews.map((rev) => (
           <View
             key={rev.id}
-            className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs gap-3"
+            style={[softShadowSm, { borderRadius: 16 }]}
+            className="p-4 sm:p-5 bg-white border border-black/[0.04] gap-3"
           >
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-3">

@@ -15,7 +15,7 @@ export function GymSimilarSection() {
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <Sparkles size={20} color="#2563EB" />
-          <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          <Text className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Similar Gyms Nearby
           </Text>
         </View>
@@ -72,7 +72,7 @@ export function GymSimilarSection() {
               </View>
 
               <View className="flex-row items-baseline gap-1 pt-2 border-t border-slate-100">
-                <Text className="text-sm font-extrabold text-slate-900">
+                <Text className="text-sm font-bold text-slate-900">
                   {formatINR(gym.minPrice)}
                 </Text>
                 <Text className="text-[11px] text-slate-500">/month</Text>

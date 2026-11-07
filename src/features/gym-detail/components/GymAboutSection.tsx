@@ -14,7 +14,7 @@ export function GymAboutSection({ gym }: Props) {
     <View className="gap-4 pt-2">
       <View className="flex-row items-center gap-2">
         <Sparkles size={20} color="#2563EB" />
-        <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+        <Text className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           About this gym
         </Text>
       </View>

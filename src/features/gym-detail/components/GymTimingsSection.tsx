@@ -20,7 +20,7 @@ export function GymTimingsSection({ gym }: Props) {
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <Clock size={20} color="#2563EB" />
-          <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          <Text className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Operating Hours & Timings
           </Text>
         </View>
@@ -69,7 +69,7 @@ export function GymTimingsSection({ gym }: Props) {
                 </Text>
                 {isToday && (
                   <View className="bg-brand px-2 py-0.5 rounded-full">
-                    <Text className="text-[10px] font-extrabold uppercase text-white">
+                    <Text className="text-[10px] font-bold uppercase text-white">
                       Today
                     </Text>
                   </View>

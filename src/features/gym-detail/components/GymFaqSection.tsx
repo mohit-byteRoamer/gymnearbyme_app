@@ -23,7 +23,7 @@ export function GymFaqSection({ gym }: Props) {
     <View className="gap-4 pt-4">
       <View className="flex-row items-center gap-2">
         <HelpCircle size={20} color="#2563EB" />
-        <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+        <Text className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           Frequently Asked Questions
         </Text>
       </View>

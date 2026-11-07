@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, TextInput, Pressable, TextInputProps } from 'react-native'
 import { LucideIcon, X } from 'lucide-react-native'
+import { softShadowSm } from '../../theme/shadows'
 
 export interface InputProps extends TextInputProps {
   value: string
@@ -27,7 +28,10 @@ export function Input({
   ...props
 }: InputProps) {
   return (
-    <View className={`relative flex-row items-center w-full bg-white rounded-xl border border-slate-200/90 shadow-sm ${containerClassName}`}>
+    <View
+      style={[softShadowSm, { borderRadius: 12 }]}
+      className={`relative flex-row items-center w-full bg-white border border-slate-200/80 ${containerClassName}`}
+    >
       {LeftIcon && (
         <View className="pl-3.5 pr-2 justify-center items-center">
           <LeftIcon size={18} color="#94A3B8" />
@@ -66,4 +70,3 @@ export function Input({
     </View>
   )
 }
-

@@ -77,7 +77,7 @@ export function GymMobilePlanSheet({ gym }: Props) {
           {/* Header */}
           <View className="flex-row items-center justify-between px-5 py-3 border-b border-slate-100">
             <View>
-              <Text className="text-base font-extrabold text-slate-900">
+              <Text className="text-base font-bold text-slate-900">
                 Select Membership Pass
               </Text>
               <Text className="text-xs text-slate-500">
@@ -111,18 +111,18 @@ export function GymMobilePlanSheet({ gym }: Props) {
                 >
                   <View className="flex-row items-center justify-between mb-1.5">
                     <View className="flex-row items-center gap-2">
-                      <Text className="font-extrabold text-slate-900 text-sm">
+                      <Text className="font-bold text-slate-900 text-sm">
                         {p.name}
                       </Text>
                       {p.isRecommended && (
                         <View className="bg-amber-400 px-2 py-0.5 rounded-full">
-                          <Text className="text-[10px] font-extrabold text-amber-900">
+                          <Text className="text-[10px] font-bold text-amber-900">
                             Best value
                           </Text>
                         </View>
                       )}
                     </View>
-                    <Text className="font-extrabold text-slate-900 text-base">
+                    <Text className="font-bold text-slate-900 text-base">
                       {formatINR(p.price)}
                     </Text>
                   </View>

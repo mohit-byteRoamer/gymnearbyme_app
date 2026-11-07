@@ -1,29 +1,46 @@
-import React, { useEffect } from 'react'
-import { View, Text } from 'react-native'
+import '../global.css'
+import  { useEffect } from 'react'
+import { View, Text, Platform } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Dumbbell } from 'lucide-react-native'
 import { useAuth } from '../src/context/AuthContext'
+import { softShadow } from '../src/theme/shadows'
 
-export default function SplashScreen() {
+export default function IndexScreen() {
   const router = useRouter()
   const { isAuthenticated } = useAuth()
 
   useEffect(() => {
+    const target = isAuthenticated ? '/home' : '/login'
+    if (Platform.OS === 'web') {
+      router.replace(target as any)
+      return
+    }
+
     const timer = setTimeout(() => {
-      if (isAuthenticated) {
-        router.replace('/home' as any)
-      } else {
-        router.replace('/login' as any)
-      }
+      router.replace(target as any)
     }, 1200)
 
     return () => clearTimeout(timer)
   }, [isAuthenticated, router])
 
   return (
-    <View className="flex-1 bg-white items-center justify-center p-6">
-      {/* 96px Centered Blue Logo */}
-      <View className="w-24 h-24 rounded-3xl bg-brand items-center justify-center shadow-lg mb-6">
+    <View
+      style={{
+        flex: 1,
+        width: '100%',
+        minHeight: Platform.OS === 'web' ? ('100vh' as any) : '100%',
+        backgroundColor: '#FFFFFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      className="flex-1 bg-white items-center justify-center p-6 w-full"
+    >
+      {/* Centered Blue Logo with Soft Shadow */}
+      <View
+        style={[softShadow, { borderRadius: 24 }]}
+        className="w-24 h-24 rounded-3xl bg-brand items-center justify-center mb-6"
+      >
         <Dumbbell size={48} color="#FFFFFF" strokeWidth={2.2} />
       </View>
 

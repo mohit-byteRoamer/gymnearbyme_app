@@ -1,9 +1,10 @@
+import '../global.css'
 import React from 'react'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts, Roboto_400Regular, Roboto_500Medium, Roboto_700Bold } from '@expo-google-fonts/roboto'
-import { View, ActivityIndicator } from 'react-native'
+import { View, ActivityIndicator, Platform } from 'react-native'
 
 import { AuthProvider } from '../src/context/AuthContext'
 import { LocationProvider } from '../src/context/LocationContext'
@@ -12,16 +13,18 @@ import { TransactionProvider } from '../src/context/TransactionContext'
 import { DevStateProvider } from '../src/context/DevStateContext'
 import { ToastProvider } from '../src/context/ToastContext'
 
-import '../global.css'
-
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
-    Roboto: Roboto_400Regular,
-    'Roboto-Medium': Roboto_500Medium,
-    'Roboto-Bold': Roboto_700Bold,
-  })
+  const [fontsLoaded] = useFonts(
+    Platform.OS === 'web'
+      ? {}
+      : {
+          Roboto: Roboto_400Regular,
+          'Roboto-Medium': Roboto_500Medium,
+          'Roboto-Bold': Roboto_700Bold,
+        }
+  )
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded && Platform.OS !== 'web') {
     return (
       <View style={{ flex: 1, backgroundColor: '#F8FAFC', justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#2563EB" />
@@ -30,7 +33,7 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{ flex: 1 }}>
       <AuthProvider>
         <LocationProvider>
           <PlanProvider>
@@ -38,7 +41,13 @@ export default function RootLayout() {
               <DevStateProvider>
                 <ToastProvider>
                   <StatusBar style="dark" />
-                  <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      animation: 'fade',
+                      contentStyle: { flex: 1, backgroundColor: '#F8FAFC' },
+                    }}
+                  >
                     <Stack.Screen name="index" />
                     <Stack.Screen name="login" />
                     <Stack.Screen name="(tabs)" />

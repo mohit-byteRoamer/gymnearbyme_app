@@ -172,7 +172,7 @@ export default function CheckoutScreen() {
             </View>
             <View className="flex-row justify-between pt-2 border-t border-slate-100">
               <Text className="text-sm font-bold text-slate-900">Total payable</Text>
-              <Text className="text-base font-extrabold text-brand">
+              <Text className="text-base font-bold text-brand">
                 {formatINR(plan.price)}
               </Text>
             </View>

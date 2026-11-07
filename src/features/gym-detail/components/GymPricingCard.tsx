@@ -76,11 +76,11 @@ export function GymPricingCard({ gym }: Props) {
           {activePlan.isRecommended && (
             <View className="flex-row items-center gap-1 bg-amber-400 px-2 py-0.5 rounded-full shadow-2xs">
               <Sparkles size={11} color="#78350F" fill="#78350F" />
-              <Text className="text-[11px] font-extrabold text-amber-900">Most Popular</Text>
+              <Text className="text-[11px] font-bold text-amber-900">Most Popular</Text>
             </View>
           )}
         </View>
-        <Text className="text-lg font-extrabold text-slate-900 tracking-tight mt-0.5">
+        <Text className="text-lg font-bold text-slate-900 tracking-tight mt-0.5">
           Select Your Plan
         </Text>
         <Text className="text-xs text-slate-500">
@@ -141,7 +141,7 @@ export function GymPricingCard({ gym }: Props) {
 
           {savings.amount > 0 && (
             <View className="bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">
-              <Text className="text-xs font-extrabold text-emerald-800">
+              <Text className="text-xs font-bold text-emerald-800">
                 Save {savings.percent}%
               </Text>
             </View>

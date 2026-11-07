@@ -82,7 +82,7 @@ export function GymDetailPage() {
         <View className="w-16 h-16 rounded-full bg-rose-100 items-center justify-center">
           <Text className="text-rose-600 text-2xl font-bold">!</Text>
         </View>
-        <Text className="text-xl font-extrabold text-slate-900">
+        <Text className="text-xl font-bold text-slate-900">
           Gym Not Found
         </Text>
         <Text className="text-sm text-slate-500 text-center">

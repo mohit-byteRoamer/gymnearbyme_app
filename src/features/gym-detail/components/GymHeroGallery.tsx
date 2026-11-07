@@ -165,7 +165,7 @@ export function GymHeroGallery({ gym }: Props) {
                     />
                     {i === 3 && photos.length > 5 && (
                       <View className="absolute inset-0 bg-black/60 items-center justify-center">
-                        <Text className="text-white text-base font-extrabold">
+                        <Text className="text-white text-base font-bold">
                           +{photos.length - 5} photos
                         </Text>
                       </View>

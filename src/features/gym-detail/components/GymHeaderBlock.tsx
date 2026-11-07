@@ -56,7 +56,7 @@ export function GymHeaderBlock({ gym }: Props) {
       {/* Title & Verified Badge */}
       <View className="gap-1">
         <View className="flex-row items-center gap-2 flex-wrap">
-          <Text className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          <Text className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
             {gym.name}
           </Text>
           {gym.verified && (

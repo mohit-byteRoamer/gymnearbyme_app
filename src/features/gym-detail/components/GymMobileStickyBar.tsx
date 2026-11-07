@@ -50,7 +50,7 @@ export function GymMobileStickyBar({ gym }: Props) {
           onPress={() => setIsMobileSheetOpen(true)}
           className="h-12 px-5 rounded-2xl bg-brand active:bg-blue-700 flex-row items-center gap-1.5 shadow-md active:scale-95"
         >
-          <Text className="text-white font-extrabold text-sm">Choose Plan</Text>
+          <Text className="text-white font-bold text-sm">Choose Plan</Text>
           <ArrowRight size={16} color="#FFFFFF" />
         </Pressable>
       </View>

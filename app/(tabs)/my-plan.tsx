@@ -27,7 +27,7 @@ import { useToast } from '../../src/context/ToastContext'
 import { useBreakpoint } from '../../src/hooks/useBreakpoint'
 import { Button } from '../../src/components/common/Button'
 import { Chip } from '../../src/components/common/Chip'
-import { softShadow } from '../../src/theme/shadows'
+import { softShadow, softShadowSm } from '../../src/theme/shadows'
 
 export default function MyPlanScreen() {
   const router = useRouter()
@@ -376,7 +376,8 @@ export default function MyPlanScreen() {
               {pastPlans.map((past) => (
                 <View
                   key={past.id}
-                  className="bg-white rounded-xl border border-slate-200/70 p-3.5 shadow-xs flex-row items-center justify-between"
+                  style={[softShadowSm, { borderRadius: 12 }]}
+                  className="bg-white border border-black/[0.04] p-3.5 flex-row items-center justify-between"
                 >
                   <View>
                     <Text className="text-xs font-bold text-slate-800">{past.gymName}</Text>

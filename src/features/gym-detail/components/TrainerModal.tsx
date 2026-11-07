@@ -43,7 +43,7 @@ export function TrainerModal() {
             </Pressable>
 
             <View className="absolute bottom-4 left-5 right-5">
-              <Text className="text-xl font-extrabold text-white tracking-tight">
+              <Text className="text-xl font-bold text-white tracking-tight">
                 {selectedTrainer.name}
               </Text>
               <Text className="text-xs text-blue-200 font-medium">
@@ -59,7 +59,7 @@ export function TrainerModal() {
               <View className="items-center">
                 <View className="flex-row items-center gap-1">
                   <Star size={14} color="#F59E0B" fill="#F59E0B" />
-                  <Text className="font-extrabold text-sm text-slate-900">
+                  <Text className="font-bold text-sm text-slate-900">
                     {selectedTrainer.rating}
                   </Text>
                 </View>
@@ -73,7 +73,7 @@ export function TrainerModal() {
               <View className="items-center">
                 <View className="flex-row items-center gap-1">
                   <Clock size={14} color="#2563EB" />
-                  <Text className="font-extrabold text-sm text-slate-900">
+                  <Text className="font-bold text-sm text-slate-900">
                     {selectedTrainer.experienceYears}y+
                   </Text>
                 </View>
@@ -87,7 +87,7 @@ export function TrainerModal() {
               <View className="items-center">
                 <View className="flex-row items-center gap-1">
                   <Users size={14} color="#059669" />
-                  <Text className="font-extrabold text-sm text-slate-900">
+                  <Text className="font-bold text-sm text-slate-900">
                     {selectedTrainer.clientsTrained || 200}+
                   </Text>
                 </View>

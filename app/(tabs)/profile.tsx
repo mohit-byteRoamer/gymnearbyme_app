@@ -25,6 +25,7 @@ import { useAuth } from '../../src/context/AuthContext'
 import { useToast } from '../../src/context/ToastContext'
 import { storage } from '../../src/utils/storage'
 import { useBreakpoint } from '../../src/hooks/useBreakpoint'
+import { softShadow, softShadowSm } from '../../src/theme/shadows'
 
 export default function ProfileScreen() {
   const { user, signOut, updatePhone } = useAuth()
@@ -129,8 +130,11 @@ export default function ProfileScreen() {
         </Text>
 
         {/* User Info Card */}
-        <View className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm items-center gap-3">
-          <View className="w-20 h-20 rounded-full bg-slate-100 overflow-hidden items-center justify-center border-4 border-slate-50 shadow-xs">
+        <View
+          style={[softShadow, { borderRadius: 16 }]}
+          className="bg-white border border-black/[0.04] p-5 items-center gap-3"
+        >
+          <View className="w-20 h-20 rounded-full bg-slate-100 overflow-hidden items-center justify-center border-4 border-slate-50">
             {user?.avatar ? (
               <Image source={{ uri: user.avatar }} className="w-full h-full" />
             ) : (
@@ -181,7 +185,10 @@ export default function ProfileScreen() {
         </View>
 
         {/* Action Menu List */}
-        <View className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <View
+          style={[softShadow, { borderRadius: 16 }]}
+          className="bg-white border border-black/[0.04] overflow-hidden"
+        >
           {navRows.map((row, idx) => {
             const Icon = row.icon
             return (
@@ -208,7 +215,8 @@ export default function ProfileScreen() {
         <View className="gap-2 pt-2">
           <Pressable
             onPress={handleLogout}
-            className="w-full py-3 px-4 bg-white rounded-2xl border border-slate-200/80 shadow-xs flex-row items-center justify-center gap-2 active:bg-slate-50"
+            style={[softShadowSm, { borderRadius: 16 }]}
+            className="w-full py-3 px-4 bg-white border border-black/[0.04] flex-row items-center justify-center gap-2 active:bg-slate-50"
           >
             <LogOut size={16} color="#DC2626" />
             <Text className="text-sm font-bold text-rose-600">Log out</Text>

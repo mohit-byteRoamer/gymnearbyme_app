@@ -7,6 +7,7 @@ import { formatINR } from '../../../src/utils/formatters'
 import { Chip } from '../../../src/components/common/Chip'
 import { useBreakpoint } from '../../../src/hooks/useBreakpoint'
 import { Transaction } from '../../../src/data/transactions'
+import { softShadow } from '../../../src/theme/shadows'
 
 export default function TransactionsScreen() {
   const router = useRouter()
@@ -74,7 +75,10 @@ export default function TransactionsScreen() {
 
         {/* Grouped List */}
         {Object.keys(grouped).length === 0 ? (
-          <View className="bg-white rounded-2xl border border-slate-200/80 p-8 sm:p-12 items-center text-center shadow-sm max-w-md mx-auto my-6 w-full gap-3">
+          <View
+            style={[softShadow, { borderRadius: 16 }]}
+            className="bg-white border border-black/[0.04] p-8 sm:p-12 items-center text-center max-w-md mx-auto my-6 w-full gap-3"
+          >
             <View className="w-14 h-14 rounded-full bg-slate-100 items-center justify-center">
               <Receipt size={28} color="#94A3B8" />
             </View>
@@ -93,7 +97,10 @@ export default function TransactionsScreen() {
                   {month}
                 </Text>
 
-                <View className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <View
+                  style={[softShadow, { borderRadius: 16 }]}
+                  className="bg-white border border-black/[0.04] overflow-hidden"
+                >
                   {items.map((tx, idx) => (
                     <Pressable
                       key={tx.id}

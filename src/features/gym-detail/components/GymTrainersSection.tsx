@@ -4,6 +4,7 @@ import { Image } from 'expo-image'
 import { Dumbbell, Star, Award, ChevronRight } from 'lucide-react-native'
 import { Gym } from '../types/index'
 import { useGymDetailStore } from '../store/gymDetailStore'
+import { softShadow } from '@/theme/shadows'
 
 interface Props {
   gym: Gym
@@ -19,7 +20,7 @@ export function GymTrainersSection({ gym }: Props) {
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <Dumbbell size={20} color="#2563EB" />
-          <Text className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          <Text className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Certified Trainers ({gym.trainers.length})
           </Text>
         </View>
@@ -38,7 +39,8 @@ export function GymTrainersSection({ gym }: Props) {
           <Pressable
             key={trainer.id}
             onPress={() => setSelectedTrainer(trainer)}
-            className="w-72 sm:w-80 bg-white rounded-3xl border border-slate-200/90 p-4 shadow-sm active:scale-[0.99] flex-col justify-between"
+            style={[softShadow, { borderRadius: 24 }]}
+            className="w-72 sm:w-80 bg-white border border-black/[0.04] p-4 active:scale-[0.99] flex-col justify-between"
           >
             <View>
               <View className="flex-row items-center gap-3.5 mb-3">
@@ -48,7 +50,7 @@ export function GymTrainersSection({ gym }: Props) {
                   contentFit="cover"
                 />
                 <View className="flex-1 min-w-0">
-                  <Text numberOfLines={1} className="font-extrabold text-slate-900 text-base leading-tight">
+                  <Text numberOfLines={1} className="font-bold text-slate-900 text-base leading-tight">
                     {trainer.name}
                   </Text>
                   <Text numberOfLines={1} className="text-xs text-slate-500 font-medium mt-0.5">

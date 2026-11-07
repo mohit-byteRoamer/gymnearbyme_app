@@ -106,7 +106,7 @@ export function GymCard({ gym }: GymCardProps) {
                 Starts from
               </Text>
               <View className="flex-row items-baseline gap-1 mt-0.5">
-                <Text className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+                <Text className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
                   {formatINR(gym.minPrice)}
                 </Text>
                 <Text className="text-xs font-normal text-slate-500">/month</Text>
