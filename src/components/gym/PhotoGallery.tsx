@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Pressable, Platform, Linking } from 'react-native'
+import { View, Text, Pressable, Platform, Linking, StyleSheet } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import {
@@ -105,7 +105,7 @@ export function PhotoGallery({ photos = [], videoThumbnails = [] }: PhotoGallery
       </View>
 
       {/* Main Container */}
-      <View className="relative aspect-[4/3] sm:aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-950 shadow-md">
+      <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="relative rounded-2xl overflow-hidden bg-slate-950 shadow-md">
         {/* Floating Back Button */}
         <Pressable
           onPress={() => router.back()}
@@ -123,7 +123,7 @@ export function PhotoGallery({ photos = [], videoThumbnails = [] }: PhotoGallery
               source={{ uri: photos[photoIndex] || photos[0] }}
               contentFit="cover"
               transition={200}
-              className="w-full h-full"
+              style={StyleSheet.absoluteFill}
             />
 
             {/* Counter Badge */}

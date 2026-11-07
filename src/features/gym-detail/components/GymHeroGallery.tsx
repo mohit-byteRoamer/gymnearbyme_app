@@ -6,6 +6,7 @@ import {
   Modal,
   Platform,
   Linking,
+  StyleSheet,
 } from 'react-native'
 import { Image } from 'expo-image'
 import {
@@ -94,11 +95,11 @@ export function GymHeroGallery({ gym }: Props) {
         <View>
           {/* Mobile View */}
           {isPhone ? (
-            <View className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-900 shadow-md">
+            <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="relative rounded-2xl overflow-hidden bg-slate-900 shadow-md">
               <Image
                 source={{ uri: photos[mobileIndex] || photos[0] }}
                 contentFit="cover"
-                className="w-full h-full"
+                style={StyleSheet.absoluteFill}
               />
 
               <View className="absolute top-3 right-3 bg-slate-900/80 px-2.5 py-1 rounded-full shadow-sm">

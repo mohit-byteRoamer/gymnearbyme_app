@@ -27,11 +27,13 @@ import { TrainerModal } from './components/TrainerModal'
 import { GymDetailSkeleton } from './components/GymDetailSkeleton'
 import { Button } from '@/components/common/Button'
 import { useBreakpoint } from '@/hooks/useBreakpoint'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export function GymDetailPage() {
   const params = useLocalSearchParams<{ id?: string }>()
   const router = useRouter()
   const { isPhone, isTabletOrDesktop } = useBreakpoint()
+  const insets = useSafeAreaInsets()
 
   const [gym, setGym] = useState<Gym | null>(null)
   const [loading, setLoading] = useState(true)
@@ -96,7 +98,10 @@ export function GymDetailPage() {
   }
 
   return (
-    <View className="flex-1 bg-slate-50">
+    <View
+      className="flex-1 bg-slate-50"
+      style={{ paddingTop: isPhone ? Math.max(insets.top, 24) : 0 }}
+    >
       <ScrollView
         className="flex-1"
         contentContainerStyle={{

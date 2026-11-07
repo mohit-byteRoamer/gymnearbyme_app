@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Linking } from 'react-native'
+import { View, Text, Linking, StyleSheet } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import { MapPin, ExternalLink } from 'lucide-react-native'
 import { Button } from '../common/Button'
@@ -20,9 +20,9 @@ export function LeafletMap({ lat = 30.8936, lng = 75.8344, gymName, address }: L
   return (
     <View className="gap-3">
       {/* Map Container */}
-      <View className="relative aspect-[16/9] w-full rounded-xl overflow-hidden border border-slate-200/80 shadow-xs">
+      <View style={{ width: '100%', aspectRatio: 16 / 9 }} className="relative rounded-xl overflow-hidden border border-slate-200/80 shadow-xs">
         <MapView
-          style={{ width: '100%', height: '100%' }}
+          style={StyleSheet.absoluteFill}
           initialRegion={{
             latitude: lat,
             longitude: lng,

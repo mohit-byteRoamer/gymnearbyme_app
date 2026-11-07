@@ -1,5 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { DesktopNavbar } from './DesktopNavbar'
 import { BottomTabs } from './BottomTabs'
@@ -13,9 +14,15 @@ export interface AppLayoutShellProps {
 
 export function AppLayoutShell({ children }: AppLayoutShellProps) {
   const { isPhone, isTabletOrDesktop } = useBreakpoint()
+  const insets = useSafeAreaInsets()
 
   return (
-    <View className="flex-1 bg-slate-50 min-h-screen">
+    <View
+      className="flex-1 bg-slate-50 min-h-screen"
+      style={{
+        paddingTop: isPhone ? Math.max(insets.top, 24) : 0,
+      }}
+    >
       {/* Offline Status Warning */}
       <OfflineBanner />
 

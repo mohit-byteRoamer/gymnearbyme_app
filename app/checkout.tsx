@@ -16,9 +16,11 @@ import { storage } from '../src/utils/storage'
 import { GymItem, GymPlan } from '../src/data/gyms'
 import { Button } from '../src/components/common/Button'
 import { Input } from '../src/components/common/Input'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function CheckoutScreen() {
   const router = useRouter()
+  const insets = useSafeAreaInsets()
   const params = useLocalSearchParams<{ gym?: string; plan?: string }>()
   const { user, updatePhone } = useAuth()
 
@@ -67,7 +69,11 @@ export default function CheckoutScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-slate-50" contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView
+      className="flex-1 bg-slate-50"
+      style={{ paddingTop: Math.max(insets.top, 24) }}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
       <View className="max-w-form w-full mx-auto px-4 py-4 sm:py-6 gap-4">
         {/* Top Bar with Back Button */}
         <View className="flex-row items-center gap-3">

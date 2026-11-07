@@ -37,7 +37,7 @@ export default function RootLayout() {
             <TransactionProvider>
               <DevStateProvider>
                 <ToastProvider>
-                  <StatusBar style="auto" />
+                  <StatusBar style="dark" />
                   <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
                     <Stack.Screen name="index" />
                     <Stack.Screen name="login" />

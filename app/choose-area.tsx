@@ -5,9 +5,11 @@ import { ArrowLeft, Search, Navigation, Check, MapPin } from 'lucide-react-nativ
 import { LOCALITIES } from '../src/data/localities'
 import { useLocation } from '../src/context/LocationContext'
 import { Input } from '../src/components/common/Input'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function ChooseAreaScreen() {
   const router = useRouter()
+  const insets = useSafeAreaInsets()
   const { selectedLocality, setLocalityById, allowLocation } = useLocation()
   const [search, setSearch] = useState('')
 
@@ -26,7 +28,11 @@ export default function ChooseAreaScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-slate-50" contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView
+      className="flex-1 bg-slate-50"
+      style={{ paddingTop: Math.max(insets.top, 24) }}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
       <View className="max-w-form w-full mx-auto px-4 py-4 sm:py-6 gap-4">
         {/* Top Bar with Back Button */}
         <View className="flex-row items-center gap-3">

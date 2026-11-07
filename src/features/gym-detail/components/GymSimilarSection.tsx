@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, ScrollView, Pressable } from 'react-native'
+import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { MapPin, Star, Sparkles, ChevronRight } from 'lucide-react-native'
@@ -38,11 +38,11 @@ export function GymSimilarSection() {
             onPress={() => router.push(`/gym/${gym.id}` as any)}
             className="w-64 sm:w-72 bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden flex-col active:scale-[0.99]"
           >
-            <View className="relative aspect-[16/10] w-full bg-slate-100">
+            <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="relative bg-slate-100">
               <Image
                 source={{ uri: gym.coverPhoto }}
                 contentFit="cover"
-                className="w-full h-full"
+                style={StyleSheet.absoluteFill}
               />
               {gym.isFeatured && (
                 <View className="absolute top-2.5 left-2.5 bg-brand px-2 py-0.5 rounded-full shadow">

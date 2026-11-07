@@ -16,9 +16,11 @@ import { usePlan } from '../../src/context/PlanContext'
 import { useToast } from '../../src/context/ToastContext'
 import { Button } from '../../src/components/common/Button'
 import { Chip } from '../../src/components/common/Chip'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function PaymentSuccessScreen() {
   const router = useRouter()
+  const insets = useSafeAreaInsets()
   const { activePlan, requestRefund } = usePlan()
   const { showToast } = useToast()
 
@@ -59,7 +61,11 @@ export default function PaymentSuccessScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-slate-50" contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView
+      className="flex-1 bg-slate-50"
+      style={{ paddingTop: Math.max(insets.top, 24) }}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
       <View className="max-w-form w-full mx-auto px-4 py-6 sm:py-8 gap-6 items-center">
         {/* Green Check Icon */}
         <View className="items-center gap-2">

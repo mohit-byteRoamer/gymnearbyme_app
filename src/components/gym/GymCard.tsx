@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { Star, MapPin, Sparkles, BadgeCheck, ChevronRight } from 'lucide-react-native'
@@ -20,15 +20,18 @@ export function GymCard({ gym }: GymCardProps) {
   return (
     <Pressable
       onPress={handlePress}
-      className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex-col h-full active:scale-[0.99] select-none"
+      className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex-col active:scale-[0.99] select-none"
     >
       {/* 1. Cover Photo */}
-      <View className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 rounded-t-2xl">
+      <View
+        style={{ width: '100%', aspectRatio: 16 / 10 }}
+        className="relative overflow-hidden bg-slate-100 rounded-t-2xl"
+      >
         <Image
           source={{ uri: gym.coverPhoto }}
           contentFit="cover"
           transition={300}
-          className="w-full h-full"
+          style={StyleSheet.absoluteFill}
         />
 
         {/* Top Badges */}

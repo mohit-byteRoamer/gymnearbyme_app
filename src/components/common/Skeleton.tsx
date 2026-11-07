@@ -7,8 +7,8 @@ export function SkeletonBox({ className = '' }: { className?: string }) {
 
 export function GymCardSkeleton() {
   return (
-    <View className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex-col h-full">
-      <SkeletonBox className="w-full aspect-[16/10] rounded-none rounded-t-2xl" />
+    <View className="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex-col">
+      <View style={{ width: '100%', aspectRatio: 16 / 10 }} className="bg-slate-200 rounded-t-2xl" />
       <View className="p-4 sm:p-5 flex-1 justify-between gap-3">
         <View className="gap-2">
           <View className="flex-row justify-between items-center gap-2">
@@ -32,7 +32,7 @@ export function GymCardSkeleton() {
 export function GymDetailSkeleton() {
   return (
     <View className="max-w-container mx-auto px-4 py-4 gap-6">
-      <View className="w-full aspect-[4/3] sm:aspect-[16/9] bg-slate-200 rounded-2xl" />
+      <View style={{ width: '100%', aspectRatio: 16 / 9 }} className="bg-slate-200 rounded-2xl" />
       <View className="gap-3">
         <View className="h-8 bg-slate-200 rounded w-2/3" />
         <View className="h-4 bg-slate-200 rounded w-1/3" />
@@ -51,4 +51,3 @@ export function GymDetailSkeleton() {
     </View>
   )
 }
-
