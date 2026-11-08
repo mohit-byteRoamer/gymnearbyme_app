@@ -77,15 +77,25 @@ export function WalkthroughScreen({
         width: '100%',
         height: '100%',
         backgroundColor: '#FFFFFF',
-        flexDirection: 'column',
+        alignItems: 'center',
       }}
     >
-      <StatusBar style="dark" />
+      <View
+        style={{
+          flex: 1,
+          width: '100%',
+          maxWidth: 480,
+          height: '100%',
+          backgroundColor: '#FFFFFF',
+          flexDirection: 'column',
+        }}
+      >
+        <StatusBar style="dark" />
 
-      {/* Top Safe Area Inset */}
-      <View style={{ height: topInset, backgroundColor: '#FFFFFF', width: '100%' }} />
+        {/* Top Safe Area Inset */}
+        <View style={{ height: topInset, backgroundColor: '#FFFFFF', width: '100%' }} />
 
-      {/* Top Header Bar with Skip */}
+        {/* Top Header Bar with Skip */}
       <View
         style={{
           height: 48,
@@ -200,6 +210,7 @@ export function WalkthroughScreen({
         </View>
       </View>
     </View>
-  )
+  </View>
+)
 }
 

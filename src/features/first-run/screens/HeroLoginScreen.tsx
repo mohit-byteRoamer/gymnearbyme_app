@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, Pressable, ScrollView, Platform } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, Pressable, ScrollView, Platform, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import { Phone, Compass } from 'lucide-react-native'
@@ -31,6 +31,9 @@ export function HeroLoginScreen({
   const insets = useSafeAreaInsets()
   // Ensure Android and iOS status bar has clean spacing and never clashes with photos
   const topInset = Math.max(insets.top, Platform.OS === 'android' ? 24 : 0)
+
+  const [isPhonePressed, setIsPhonePressed] = useState(false)
+  const [isGuestPressed, setIsGuestPressed] = useState(false)
 
   return (
     <View
@@ -112,13 +115,13 @@ export function HeroLoginScreen({
             {/* Phone Login Option */}
             {enablePhoneAuth && (
               <>
-                {/* Divider "or" */}
+                {/* Divider "or" between primary and phone login */}
                 <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: 12,
-                    marginVertical: 1,
+                    marginVertical: 2,
+                    width: '100%',
                   }}
                 >
                   <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
@@ -128,6 +131,7 @@ export function HeroLoginScreen({
                       fontSize: 13,
                       color: '#94A3B8',
                       fontWeight: '400',
+                      marginHorizontal: 12,
                     }}
                   >
                     or
@@ -136,94 +140,57 @@ export function HeroLoginScreen({
                 </View>
 
                 {/* Secondary Button: Continue with phone number */}
-                <Pressable
-                  onPress={onPhoneSignIn}
-                  style={({ pressed }) => ({
-                    width: '100%',
-                    height: 52,
-                    borderRadius: 12,
-                    backgroundColor: pressed ? '#F8FAFC' : '#FFFFFF',
-                    borderWidth: 1,
-                    borderColor: pressed ? '#CBD5E1' : '#E2E8F0',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                  })}
-                  accessibilityRole="button"
-                  accessibilityLabel="Continue with phone number"
-                >
-                  <Phone size={18} color="#0F172A" />
-                  <Text
-                    style={{
-                      fontFamily: 'Roboto',
-                      fontSize: 16,
-                      fontWeight: '500',
-                      color: '#0F172A',
-                    }}
+                <View style={{ width: '100%' }}>
+                  <Pressable
+                    onPress={onPhoneSignIn}
+                    onPressIn={() => setIsPhonePressed(true)}
+                    onPressOut={() => setIsPhonePressed(false)}
+                    style={[
+                      styles.actionButton,
+                      {
+                        backgroundColor: isPhonePressed ? '#F8FAFC' : '#FFFFFF',
+                        borderColor: isPhonePressed ? '#CBD5E1' : '#E2E8F0',
+                      },
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityLabel="Continue with phone number"
                   >
-                    Continue with phone number
-                  </Text>
-                </Pressable>
+                    <View style={styles.actionButtonContent}>
+                      <Phone size={18} color="#0F172A" style={{ marginRight: 10 }} />
+                      <Text style={styles.actionButtonText}>
+                        Continue with phone number
+                      </Text>
+                    </View>
+                  </Pressable>
+                </View>
               </>
             )}
 
             {/* Guest Option Button: Explore without login */}
             {onGuestExplore && (
-              <>
-                {/* Divider "or" */}
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 12,
-                    marginVertical: 1,
-                  }}
-                >
-                  <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
-                  <Text
-                    style={{
-                      fontFamily: 'Roboto',
-                      fontSize: 13,
-                      color: '#94A3B8',
-                      fontWeight: '400',
-                    }}
-                  >
-                    or
-                  </Text>
-                  <View style={{ flex: 1, height: 1, backgroundColor: '#E2E8F0' }} />
-                </View>
-
+              <View style={{ width: '100%', marginTop: 2 }}>
                 <Pressable
                   onPress={onGuestExplore}
-                  style={({ pressed }) => ({
-                    width: '100%',
-                    height: 52,
-                    borderRadius: 12,
-                    backgroundColor: pressed ? '#EFF6FF' : '#FFFFFF',
-                    borderWidth: 1,
-                    borderColor: pressed ? '#2563EB' : '#E2E8F0',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                  })}
+                  onPressIn={() => setIsGuestPressed(true)}
+                  onPressOut={() => setIsGuestPressed(false)}
+                  style={[
+                    styles.guestButton,
+                    {
+                      backgroundColor: isGuestPressed ? '#EFF6FF' : '#F8FAFC',
+                      borderColor: isGuestPressed ? '#BFDBFE' : '#E2E8F0',
+                    },
+                  ]}
                   accessibilityRole="button"
                   accessibilityLabel="Explore as Guest"
                 >
-                  <Compass size={18} color="#2563EB" />
-                  <Text
-                    style={{
-                      fontFamily: 'Roboto',
-                      fontSize: 16,
-                      fontWeight: '600',
-                      color: '#2563EB',
-                    }}
-                  >
-                    Explore as Guest
-                  </Text>
+                  <View style={styles.actionButtonContent}>
+                    <Compass size={18} color="#2563EB" style={{ marginRight: 8 }} />
+                    <Text style={styles.guestButtonText}>
+                      Explore as Guest
+                    </Text>
+                  </View>
                 </Pressable>
-              </>
+              </View>
             )}
 
             {/* Helper reassurance */}
@@ -319,3 +286,41 @@ export function HeroLoginScreen({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  actionButton: {
+    width: '100%',
+    height: 52,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  actionButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionButtonText: {
+    fontFamily: 'Roboto',
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#0F172A',
+  },
+  guestButton: {
+    width: '100%',
+    height: 48,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  guestButtonText: {
+    fontFamily: 'Roboto',
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#2563EB',
+  },
+})
