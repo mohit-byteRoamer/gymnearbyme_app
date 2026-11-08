@@ -103,30 +103,39 @@ The native Android project is pre-configured and located in the `android/` direc
   - Connected Android device with USB debugging enabled (`adb devices`) or an active Android Virtual Device (AVD).
 - **Output**: Builds the debug APK and installs it directly onto the connected emulator/device, then launches the app connected to Metro.
 
-#### Release APK (Local Standalone Binary on Windows)
-- **Command** (PowerShell / Windows CMD from project root):
-  ```powershell
-  cd android
-  .\gradlew.bat assembleRelease --no-daemon
-  cd ..
+#### Release APK (Local Standalone Binary on Windows, macOS, Linux)
+- **Command**:
+  ```bash
+  # Cross-platform npm script (works on Windows, macOS, Linux)
+  npm run build:android
+  # or: npm run build:android:apk
+
+  # Direct Gradle invocation (PowerShell / Windows CMD):
+  cd android && .\gradlew.bat assembleRelease --no-daemon && cd ..
+
+  # Direct Gradle invocation (macOS / Linux):
+  cd android && ./gradlew assembleRelease --no-daemon && cd ..
   ```
-  *(On macOS / Linux: `cd android && ./gradlew assembleRelease && cd ..`)*
 - **Prerequisites**:
   - Node.js >= 18.0.0
   - JDK 17 (`java -version` should report 17.x)
   - Android SDK configured (via `ANDROID_HOME` or `android/local.properties` pointing to `sdk.dir=...`)
 - **Output Location**:
   - Primary Gradle build artifact: `android/app/build/outputs/apk/release/app-release.apk`
-  - Root distribution copy: `./GymApp.apk` (copied for convenient direct device installation)
+  - Root distribution copy: `./GymApp.apk` (copied automatically by `npm run build:android`)
 
 #### Release AAB (Android App Bundle for Google Play Store)
-- **Command** (PowerShell / Windows CMD from project root):
-  ```powershell
-  cd android
-  .\gradlew.bat bundleRelease --no-daemon
-  cd ..
+- **Command**:
+  ```bash
+  # Cross-platform npm script (works on Windows, macOS, Linux)
+  npm run build:android:aab
+
+  # Direct Gradle invocation (PowerShell / Windows CMD):
+  cd android && .\gradlew.bat bundleRelease --no-daemon && cd ..
+
+  # Direct Gradle invocation (macOS / Linux):
+  cd android && ./gradlew bundleRelease --no-daemon && cd ..
   ```
-  *(On macOS / Linux: `cd android && ./gradlew bundleRelease && cd ..`)*
 - **Prerequisites**:
   - Same local prerequisites as Release APK (JDK 17, Android SDK).
   - For store deployment: Production signing keystore configured in `android/app/build.gradle` or enrolled in Google Play App Signing.
@@ -229,18 +238,19 @@ The profiles configured in `eas.json` are:
 
 | Platform | Build Type | Command | Output Location | Prerequisites |
 | :--- | :--- | :--- | :--- | :--- |
-| **Web** | Development (Dev Server) | `npm run web` *(or `npx expo start --web`)* | `http://localhost:8081` | Node.js >= 18 |
-| **Web** | Production Static Export | `npm run build` *(or `npx expo export -p web`)* | `dist/` | Node.js >= 18 |
-| **Web** | Local Production Preview | `npx serve dist` | `http://localhost:3000` | Node.js >= 18, `dist/` |
+| **Web** | Development (Dev Server) | `npm run web` *(or `npm run dev`)* | `http://localhost:8081` | Node.js >= 18 |
+| **Web** | Production Static Export | `npm run build:web` *(or `npm run build`)* | `dist/` | Node.js >= 18 |
+| **Web** | Local Production Preview | `npm run preview:web` *(or `npx serve dist`)* | `http://localhost:3000` | Node.js >= 18, `dist/` |
 | **Android** | Local Dev (Emulator / ADB) | `npm run android` *(or `npx expo run:android`)* | Installed directly on device | Node >= 18, JDK 17, Android SDK |
-| **Android** | Local Release APK (Windows) | `cd android && .\gradlew.bat assembleRelease` | `android/app/build/outputs/apk/release/app-release.apk` *(copy at `./GymApp.apk`)* | Node >= 18, JDK 17, Android SDK |
-| **Android** | Local Release AAB (Play Store) | `cd android && .\gradlew.bat bundleRelease` | `android/app/build/outputs/bundle/release/app-release.aab` | Node >= 18, JDK 17, Android SDK |
-| **Android** | EAS Cloud Preview APK | `eas build --platform android --profile preview` | EAS Dashboard / Download link | EAS CLI, `eas login` |
-| **Android** | EAS Cloud Production AAB | `eas build --platform android --profile production` | EAS Dashboard / Play Store submit | EAS CLI, `eas login` |
-| **iOS** | Prebuild Native Project | `npx expo prebuild --platform ios` | Generates `ios/` folder *(macOS only)* | Node >= 18, macOS, Xcode |
-| **iOS** | Local Release (macOS only) | `npx expo run:ios --configuration Release` | `ios/build/` / Installed on device | macOS, Xcode >= 16, CocoaPods |
-| **iOS** | EAS Cloud Simulator Build | `eas build --platform ios --profile development` | EAS Dashboard (`.tar.gz`) | EAS CLI, `eas login` |
-| **iOS** | EAS Cloud Production IPA | `eas build --platform ios --profile production` | EAS Dashboard (`.ipa`) / TestFlight | EAS CLI, Apple Developer Account |
+| **Android** | Local Release APK (Cross-Platform) | `npm run build:android` *(or `npm run build:android:apk`)* | `android/app/build/outputs/apk/release/app-release.apk` *(copied to `./GymApp.apk`)* | Node >= 18, JDK 17, Android SDK |
+| **Android** | Local Release AAB (Play Store) | `npm run build:android:aab` | `android/app/build/outputs/bundle/release/app-release.aab` | Node >= 18, JDK 17, Android SDK |
+| **Android** | EAS Cloud Preview APK | `npm run build:android:eas` *(or `eas build -p android --profile preview`)* | EAS Dashboard / Download link | EAS CLI, `eas login` |
+| **Android** | EAS Cloud Production AAB | `npm run build:android:prod` *(or `eas build -p android --profile production`)* | EAS Dashboard / Play Store submit | EAS CLI, `eas login` |
+| **iOS** | Prebuild Native Project | `npm run prebuild:ios` *(or `npx expo prebuild --platform ios`)* | Generates `ios/` folder *(macOS only)* | Node >= 18, macOS, Xcode |
+| **iOS** | Local Release (macOS only) | `npm run build:ios:local` | `ios/build/` / Installed on device | macOS, Xcode >= 16, CocoaPods |
+| **iOS** | EAS Cloud Simulator Build | `npm run build:ios:sim` | EAS Dashboard (`.tar.gz`) | EAS CLI, `eas login` |
+| **iOS** | EAS Cloud Preview IPA | `npm run build:ios` | EAS Dashboard (`.ipa`) | EAS CLI, `eas login` |
+| **iOS** | EAS Cloud Production IPA | `npm run build:ios:prod` | EAS Dashboard (`.ipa`) / TestFlight | EAS CLI, Apple Developer Account |
 
 ---
 

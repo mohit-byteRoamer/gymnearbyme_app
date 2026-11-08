@@ -8,9 +8,21 @@
     "web": "expo start --web",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "build": "expo export -p web",
     "tunnel": "expo start --tunnel ngrok",
-    "test": "jest"
+    "test": "jest",
+    "build": "npm run build:web",
+    "build:web": "expo export -p web",
+    "preview:web": "npx serve dist",
+    "build:android": "node scripts/build-android.js apk",
+    "build:android:apk": "node scripts/build-android.js apk",
+    "build:android:aab": "node scripts/build-android.js aab",
+    "build:android:eas": "eas build --platform android --profile preview",
+    "build:android:prod": "eas build --platform android --profile production",
+    "build:ios": "eas build --platform ios --profile preview",
+    "build:ios:local": "expo run:ios --configuration Release",
+    "build:ios:sim": "eas build --platform ios --profile development",
+    "build:ios:prod": "eas build --platform ios --profile production",
+    "prebuild:ios": "expo prebuild --platform ios"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.4.3",
