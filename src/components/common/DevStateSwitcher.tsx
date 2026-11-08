@@ -7,10 +7,12 @@ import {
   Modal,
   ScrollView,
 } from 'react-native'
-import { Settings2, X, RefreshCw } from 'lucide-react-native'
+import { Settings2, X, RefreshCw, Smartphone, Layers } from 'lucide-react-native'
+import { useRouter } from 'expo-router'
 import { useDevState } from '../../context/DevStateContext'
 
 export function DevStateSwitcher() {
+  const router = useRouter()
   const {
     isOfflineForced,
     setIsOfflineForced,
@@ -24,6 +26,8 @@ export function DevStateSwitcher() {
     setForceGymNotJoining,
     activePlanOverride,
     setActivePlanOverride,
+    enablePhoneAuth,
+    setEnablePhoneAuth,
     isDevSwitcherOpen,
     setIsDevSwitcherOpen,
     resetAllOverrides,
@@ -80,6 +84,36 @@ export function DevStateSwitcher() {
                   Reset All Overrides
                 </Text>
               </Pressable>
+
+              {/* First-Run Design Gallery */}
+              <Pressable
+                onPress={() => {
+                  setIsDevSwitcherOpen(false)
+                  router.push('/first-run' as any)
+                }}
+                className="w-full py-2 px-2.5 bg-blue-50 active:bg-blue-100 rounded-lg border border-blue-200 flex-row items-center justify-center gap-1.5"
+              >
+                <Layers size={14} color="#2563EB" />
+                <Text className="text-blue-700 font-bold text-xs">
+                  View First-Run Design Showcase
+                </Text>
+              </Pressable>
+
+              {/* Feature Flags Section */}
+              <View className="gap-2 pt-2 border-t border-slate-100">
+                <Text className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+                  Feature Flags
+                </Text>
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-xs text-slate-700">Phone Auth Variant</Text>
+                  <Switch
+                    value={enablePhoneAuth}
+                    onValueChange={setEnablePhoneAuth}
+                    trackColor={{ false: '#cbd5e1', true: '#93c5fd' }}
+                    thumbColor={enablePhoneAuth ? '#2563EB' : '#f1f5f9'}
+                  />
+                </View>
+              </View>
 
               {/* Toggles */}
               <View className="gap-2">

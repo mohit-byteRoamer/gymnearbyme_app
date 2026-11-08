@@ -10,10 +10,14 @@ export function delay(ms: number = FAKE_DELAY_MS): Promise<void> {
 export interface UserProfile {
   id: string
   name: string
+  firstName?: string
+  lastName?: string
   email: string
   phone: string
   avatar: string
   joinedDate: string
+  hasCompletedProfile?: boolean
+  isGuest?: boolean
 }
 
 export interface PaymentSimulationResult {
@@ -77,20 +81,47 @@ export async function getLocalities(): Promise<Locality[]> {
 }
 
 /**
- * Simulate Google OAuth sign-in with 600ms delay
+ * Simulate Google OAuth sign-in with 800ms delay
  */
-export async function simulateGoogleSignIn(shouldFail: boolean = false): Promise<UserProfile> {
+export async function simulateGoogleSignIn(
+  shouldFail: boolean = false,
+  isFirstTime: boolean = false
+): Promise<UserProfile> {
   await delay(800)
   if (shouldFail) {
     throw new Error('Sign in did not work. Please try again.')
   }
   return {
-    id: 'user-amrit-singh',
-    name: 'Amritpal Singh',
+    id: 'user-google-101',
+    name: isFirstTime ? '' : 'Amritpal Singh',
+    firstName: isFirstTime ? '' : 'Amritpal',
+    lastName: isFirstTime ? '' : 'Singh',
     email: 'amrit.singh@gmail.com',
     phone: '+919876543210',
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
     joinedDate: 'November 2026',
+    hasCompletedProfile: !isFirstTime,
+  }
+}
+
+/**
+ * Simulate Phone + OTP sign-in with 600ms delay
+ */
+export async function simulatePhoneSignIn(
+  phone: string,
+  isFirstTime: boolean = false
+): Promise<UserProfile> {
+  await delay(600)
+  return {
+    id: `user-phone-${phone.replace(/\D/g, '')}`,
+    name: isFirstTime ? '' : 'Amritpal Singh',
+    firstName: isFirstTime ? '' : 'Amritpal',
+    lastName: isFirstTime ? '' : 'Singh',
+    email: '',
+    phone: phone.startsWith('+91') ? phone : `+91${phone}`,
+    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+    joinedDate: 'November 2026',
+    hasCompletedProfile: !isFirstTime,
   }
 }
 

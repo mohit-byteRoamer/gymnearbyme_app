@@ -15,6 +15,8 @@ interface DevStateContextType {
   setForceGymNotJoining: (v: boolean) => void
   activePlanOverride: string | null
   setActivePlanOverride: (v: string | null) => void
+  enablePhoneAuth: boolean
+  setEnablePhoneAuth: (v: boolean) => void
   isDevSwitcherOpen: boolean
   setIsDevSwitcherOpen: (v: boolean) => void
   resetAllOverrides: () => void
@@ -30,6 +32,7 @@ export function DevStateProvider({ children }: { children: ReactNode }) {
   const [forceLoginError, setForceLoginError] = useState(false)
   const [forceGymNotJoining, setForceGymNotJoining] = useState(false)
   const [activePlanOverride, setActivePlanOverride] = useState<string | null>(null)
+  const [enablePhoneAuth, setEnablePhoneAuth] = useState(false)
   const [isDevSwitcherOpen, setIsDevSwitcherOpen] = useState(false)
 
   // Listen to network status on web
@@ -56,6 +59,7 @@ export function DevStateProvider({ children }: { children: ReactNode }) {
     setForceLoginError(false)
     setForceGymNotJoining(false)
     setActivePlanOverride(null)
+    setEnablePhoneAuth(false)
   }
 
   return (
@@ -74,6 +78,8 @@ export function DevStateProvider({ children }: { children: ReactNode }) {
         setForceGymNotJoining,
         activePlanOverride,
         setActivePlanOverride,
+        enablePhoneAuth,
+        setEnablePhoneAuth,
         isDevSwitcherOpen,
         setIsDevSwitcherOpen,
         resetAllOverrides,

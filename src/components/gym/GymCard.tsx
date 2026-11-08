@@ -2,10 +2,11 @@ import React from 'react'
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
-import { Star, MapPin, Sparkles, BadgeCheck, ChevronRight } from 'lucide-react-native'
+import { Star, MapPin, Sparkles, BadgeCheck, ChevronRight, Bookmark } from 'lucide-react-native'
 import { formatINR } from '../../utils/formatters'
 import { GymItem } from '../../data/gyms'
 import { softShadow } from '../../theme/shadows'
+import { useBookmarks } from '../../context/BookmarkContext'
 
 export interface GymCardProps {
   gym: GymItem
@@ -13,9 +14,16 @@ export interface GymCardProps {
 
 export function GymCard({ gym }: GymCardProps) {
   const router = useRouter()
+  const { isBookmarked, toggleBookmark } = useBookmarks()
+  const bookmarked = isBookmarked(gym.id)
 
   const handlePress = () => {
     router.push(`/gym/${gym.id}` as any)
+  }
+
+  const handleBookmarkPress = (e: any) => {
+    e?.stopPropagation?.()
+    toggleBookmark(gym.id, gym.name)
   }
 
   return (
@@ -38,7 +46,7 @@ export function GymCard({ gym }: GymCardProps) {
             style={StyleSheet.absoluteFill}
           />
 
-          {/* Top Badges */}
+          {/* Top Badges & Bookmark Action */}
           <View className="absolute top-3 left-3 right-3 flex-row items-center justify-between">
             {gym.isFeatured ? (
               <View className="flex-row items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-600/90 border border-white/20 shadow-sm">
@@ -48,6 +56,24 @@ export function GymCard({ gym }: GymCardProps) {
             ) : (
               <View />
             )}
+
+            <Pressable
+              onPress={handleBookmarkPress}
+              hitSlop={8}
+              className={`w-8 h-8 rounded-full items-center justify-center border shadow-xs transition-transform active:scale-90 ${
+                bookmarked
+                  ? 'bg-blue-50/95 border-blue-300'
+                  : 'bg-white/90 border-slate-200/80 hover:bg-white'
+              }`}
+              accessibilityRole="button"
+              accessibilityLabel={bookmarked ? `Remove ${gym.name} from bookmarks` : `Bookmark ${gym.name}`}
+            >
+              <Bookmark
+                size={15}
+                color={bookmarked ? '#2563EB' : '#475569'}
+                fill={bookmarked ? '#2563EB' : 'transparent'}
+              />
+            </Pressable>
           </View>
 
           {/* Bottom Overlay Status Badge */}

@@ -20,18 +20,23 @@ import {
   Trash2,
   Edit2,
   Check,
+  Bookmark,
 } from 'lucide-react-native'
 import { useAuth } from '../../src/context/AuthContext'
 import { useToast } from '../../src/context/ToastContext'
+import { useBookmarks } from '../../src/context/BookmarkContext'
 import { storage } from '../../src/utils/storage'
 import { useBreakpoint } from '../../src/hooks/useBreakpoint'
 import { softShadow, softShadowSm } from '../../src/theme/shadows'
 
 export default function ProfileScreen() {
-  const { user, signOut, updatePhone } = useAuth()
+  const { user, isGuest, signOut, updatePhone } = useAuth()
   const { showToast } = useToast()
+  const { bookmarkedIds } = useBookmarks()
   const router = useRouter()
   const { isPhone } = useBreakpoint()
+
+  const bookmarkedCount = bookmarkedIds.length
 
   const [isEditingPhone, setIsEditingPhone] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState(user?.phone || '+919876543210')
@@ -135,7 +140,11 @@ export default function ProfileScreen() {
           className="bg-white border border-black/[0.04] p-5 items-center gap-3"
         >
           <View className="w-20 h-20 rounded-full bg-slate-100 overflow-hidden items-center justify-center border-4 border-slate-50">
-            {user?.avatar ? (
+            {isGuest ? (
+              <View className="w-full h-full bg-blue-50 items-center justify-center">
+                <Text className="text-2xl font-bold text-brand">G</Text>
+              </View>
+            ) : user?.avatar ? (
               <Image source={{ uri: user.avatar }} className="w-full h-full" />
             ) : (
               <Text className="text-2xl font-bold text-brand">
@@ -146,43 +155,93 @@ export default function ProfileScreen() {
 
           <View className="items-center">
             <Text className="text-lg font-bold text-slate-900">
-              {user?.name || 'Amritpal Singh'}
+              {isGuest ? 'Guest Explorer' : user?.name || 'Amritpal Singh'}
             </Text>
             <Text className="text-xs text-slate-400">
-              {user?.email || 'amrit.singh@gmail.com'}
+              {isGuest
+                ? 'Exploring without an account'
+                : user?.email || 'amrit.singh@gmail.com'}
             </Text>
           </View>
 
-          {/* Phone */}
-          <View className="pt-2 border-t border-slate-100 w-full flex-row items-center justify-center gap-2">
-            {isEditingPhone ? (
-              <View className="flex-row items-center gap-2">
-                <TextInput
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
-                  className="border border-brand rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium w-36 bg-blue-50/30"
-                  autoFocus
-                />
+          {/* Guest Sign-in prompt or Phone edit */}
+          {isGuest ? (
+            <Pressable
+              onPress={() => router.push('/login' as any)}
+              className="mt-2 w-full py-2.5 px-4 rounded-xl bg-brand items-center justify-center active:bg-blue-700"
+            >
+              <Text className="text-white text-xs font-bold">
+                Sign In to Save Plans & Vouchers
+              </Text>
+            </Pressable>
+          ) : (
+            <View className="pt-2 border-t border-slate-100 w-full flex-row items-center justify-center gap-2">
+              {isEditingPhone ? (
+                <View className="flex-row items-center gap-2">
+                  <TextInput
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                    className="border border-brand rounded-lg px-2.5 py-1 text-xs text-slate-800 font-medium w-36 bg-blue-50/30"
+                    autoFocus
+                  />
+                  <Pressable
+                    onPress={handleSavePhone}
+                    className="p-1.5 rounded-lg bg-brand text-white active:bg-blue-700"
+                  >
+                    <Check size={14} color="#FFFFFF" />
+                  </Pressable>
+                </View>
+              ) : (
                 <Pressable
-                  onPress={handleSavePhone}
-                  className="p-1.5 rounded-lg bg-brand text-white active:bg-blue-700"
+                  onPress={() => setIsEditingPhone(true)}
+                  className="flex-row items-center gap-1.5 py-1 px-2.5 rounded-lg active:bg-slate-50"
                 >
-                  <Check size={14} color="#FFFFFF" />
+                  <Text className="text-xs text-slate-600 font-medium">
+                    {user?.phone || '+919876543210'}
+                  </Text>
+                  <Edit2 size={12} color="#94A3B8" />
                 </Pressable>
-              </View>
-            ) : (
-              <Pressable
-                onPress={() => setIsEditingPhone(true)}
-                className="flex-row items-center gap-1.5 py-1 px-2.5 rounded-lg active:bg-slate-50"
-              >
-                <Text className="text-xs text-slate-600 font-medium">
-                  {user?.phone || '+919876543210'}
-                </Text>
-                <Edit2 size={12} color="#94A3B8" />
-              </Pressable>
-            )}
-          </View>
+              )}
+            </View>
+          )}
         </View>
+
+        {/* Saved Gyms / Bookmarks Card */}
+        <Pressable
+          onPress={() => router.push('/bookmarks' as any)}
+          style={[softShadow, { borderRadius: 16 }]}
+          className="bg-white border border-black/[0.04] p-4 flex-row items-center justify-between active:bg-slate-50"
+          accessibilityRole="button"
+          accessibilityLabel="View saved gyms"
+        >
+          <View className="flex-row items-center gap-3">
+            <View className="w-10 h-10 rounded-xl bg-blue-50 items-center justify-center">
+              <Bookmark
+                size={20}
+                color="#2563EB"
+                fill={bookmarkedCount > 0 ? '#2563EB' : 'transparent'}
+              />
+            </View>
+            <View>
+              <Text className="text-sm font-bold text-slate-900">
+                Saved Gyms
+              </Text>
+              <Text className="text-xs text-slate-500">
+                {bookmarkedCount === 1
+                  ? '1 gym bookmarked'
+                  : `${bookmarkedCount} gyms bookmarked`}
+              </Text>
+            </View>
+          </View>
+          <View className="flex-row items-center gap-2">
+            <View className="bg-slate-100 px-2.5 py-0.5 rounded-full">
+              <Text className="text-xs font-semibold text-slate-600">
+                {bookmarkedCount}
+              </Text>
+            </View>
+            <ChevronRight size={18} color="#94A3B8" />
+          </View>
+        </Pressable>
 
         {/* Action Menu List */}
         <View
@@ -218,19 +277,27 @@ export default function ProfileScreen() {
             style={[softShadowSm, { borderRadius: 16 }]}
             className="w-full py-3 px-4 bg-white border border-black/[0.04] flex-row items-center justify-center gap-2 active:bg-slate-50"
           >
-            <LogOut size={16} color="#DC2626" />
-            <Text className="text-sm font-bold text-rose-600">Log out</Text>
-          </Pressable>
-
-          <Pressable
-            onPress={handleDeleteAccount}
-            className="w-full py-3 px-4 flex-row items-center justify-center gap-2 active:opacity-70"
-          >
-            <Trash2 size={14} color="#94A3B8" />
-            <Text className="text-xs text-slate-400 font-medium">
-              Delete demo account
+            <LogOut size={16} color={isGuest ? '#2563EB' : '#DC2626'} />
+            <Text
+              className={`text-sm font-bold ${
+                isGuest ? 'text-brand' : 'text-rose-600'
+              }`}
+            >
+              {isGuest ? 'Exit Guest Mode' : 'Log out'}
             </Text>
           </Pressable>
+
+          {!isGuest && (
+            <Pressable
+              onPress={handleDeleteAccount}
+              className="w-full py-3 px-4 flex-row items-center justify-center gap-2 active:opacity-70"
+            >
+              <Trash2 size={14} color="#94A3B8" />
+              <Text className="text-xs text-slate-400 font-medium">
+                Delete demo account
+              </Text>
+            </Pressable>
+          )}
         </View>
       </View>
     </ScrollView>

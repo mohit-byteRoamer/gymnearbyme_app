@@ -12,6 +12,7 @@ import { PlanProvider } from '../src/context/PlanContext'
 import { TransactionProvider } from '../src/context/TransactionContext'
 import { DevStateProvider } from '../src/context/DevStateContext'
 import { ToastProvider } from '../src/context/ToastContext'
+import { BookmarkProvider } from '../src/context/BookmarkContext'
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -36,24 +37,32 @@ export default function RootLayout() {
             <TransactionProvider>
               <DevStateProvider>
                 <ToastProvider>
-                  <StatusBar style="dark" />
-                  <Stack
-                    screenOptions={{
-                      headerShown: false,
-                      animation: 'fade',
-                      contentStyle: { flex: 1, backgroundColor: '#F8FAFC' },
-                    }}
-                  >
-                    <Stack.Screen name="index" />
-                    <Stack.Screen name="login" />
-                    <Stack.Screen name="(tabs)" />
-                    <Stack.Screen name="choose-area" options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="gym/[id]" />
-                    <Stack.Screen name="checkout" />
-                    <Stack.Screen name="payment/confirming" />
-                    <Stack.Screen name="payment/success" />
-                    <Stack.Screen name="payment/failed" />
-                  </Stack>
+                  <BookmarkProvider>
+                    <StatusBar style="dark" />
+                    <Stack
+                      screenOptions={{
+                        headerShown: false,
+                        animation: 'fade',
+                        contentStyle: { flex: 1, backgroundColor: '#F8FAFC' },
+                      }}
+                    >
+                      <Stack.Screen name="index" />
+                      <Stack.Screen name="walkthrough" />
+                      <Stack.Screen name="login" />
+                      <Stack.Screen name="complete-profile" />
+                      <Stack.Screen name="phone-login" />
+                      <Stack.Screen name="otp" />
+                      <Stack.Screen name="first-run" />
+                      <Stack.Screen name="(tabs)" />
+                      <Stack.Screen name="bookmarks" />
+                      <Stack.Screen name="choose-area" options={{ presentation: 'modal' }} />
+                      <Stack.Screen name="gym/[id]" />
+                      <Stack.Screen name="checkout" />
+                      <Stack.Screen name="payment/confirming" />
+                      <Stack.Screen name="payment/success" />
+                      <Stack.Screen name="payment/failed" />
+                    </Stack>
+                  </BookmarkProvider>
                 </ToastProvider>
               </DevStateProvider>
             </TransactionProvider>

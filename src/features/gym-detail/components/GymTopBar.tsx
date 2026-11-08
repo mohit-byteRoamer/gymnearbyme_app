@@ -1,11 +1,12 @@
 import React from 'react'
 import { View, Text, Pressable, Share } from 'react-native'
 import { useRouter } from 'expo-router'
-import { ArrowLeft, Share2, Heart, Moon, Sun, ChevronRight } from 'lucide-react-native'
+import { ArrowLeft, Share2, Bookmark, Moon, Sun, ChevronRight } from 'lucide-react-native'
 import * as Clipboard from 'expo-clipboard'
 import { useGymDetailStore } from '../store/gymDetailStore'
 import { Gym } from '../types/index'
 import { useToast } from '@/context/ToastContext'
+import { useBookmarks } from '@/context/BookmarkContext'
 
 interface Props {
   gym: Gym
@@ -14,7 +15,9 @@ interface Props {
 export function GymTopBar({ gym }: Props) {
   const router = useRouter()
   const { showToast } = useToast()
-  const { isFavorite, toggleFavorite, theme, toggleTheme } = useGymDetailStore()
+  const { theme, toggleTheme } = useGymDetailStore()
+  const { isBookmarked, toggleBookmark } = useBookmarks()
+  const bookmarked = isBookmarked(gym.id)
 
   const handleShare = async () => {
     try {
@@ -73,19 +76,19 @@ export function GymTopBar({ gym }: Props) {
           )}
         </Pressable>
 
-        {/* Favorite */}
+        {/* Bookmark / Save */}
         <Pressable
-          onPress={toggleFavorite}
+          onPress={() => toggleBookmark(gym.id, gym.name)}
           className={`w-10 h-10 rounded-xl bg-white border shadow-xs items-center justify-center active:scale-95 ${
-            isFavorite ? 'border-rose-200' : 'border-slate-200/80'
+            bookmarked ? 'border-blue-200 bg-blue-50/50' : 'border-slate-200/80'
           }`}
           accessibilityRole="button"
-          accessibilityLabel="Save gym"
+          accessibilityLabel={bookmarked ? `Remove ${gym.name} from bookmarks` : `Bookmark ${gym.name}`}
         >
-          <Heart
+          <Bookmark
             size={16}
-            color={isFavorite ? '#EF4444' : '#475569'}
-            fill={isFavorite ? '#EF4444' : 'transparent'}
+            color={bookmarked ? '#2563EB' : '#475569'}
+            fill={bookmarked ? '#2563EB' : 'transparent'}
           />
         </Pressable>
 

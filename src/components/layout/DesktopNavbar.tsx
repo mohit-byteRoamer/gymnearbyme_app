@@ -8,20 +8,30 @@ import {
   Receipt,
   User,
   Sparkles,
+  Bookmark,
 } from 'lucide-react-native'
 import { useAuth } from '../../context/AuthContext'
 import { usePlan } from '../../context/PlanContext'
+import { useBookmarks } from '../../context/BookmarkContext'
 
 export function DesktopNavbar() {
   const router = useRouter()
   const pathname = usePathname()
   const { user } = useAuth()
   const { activePlan } = usePlan()
+  const { bookmarkedIds } = useBookmarks()
 
   const hasActivePlan = activePlan && activePlan.status === 'ACTIVE'
+  const hasBookmarks = bookmarkedIds.length > 0
 
   const navItems = [
     { label: 'Home', path: '/home', icon: Home },
+    {
+      label: 'Saved',
+      path: '/bookmarks',
+      icon: Bookmark,
+      badge: hasBookmarks,
+    },
     {
       label: 'My plan',
       path: '/my-plan',

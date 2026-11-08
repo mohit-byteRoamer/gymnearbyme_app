@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import { View, Text, ScrollView, Pressable } from 'react-native'
 import { useRouter } from 'expo-router'
-import { Receipt, Dumbbell, ChevronRight } from 'lucide-react-native'
+import { Receipt, Dumbbell, ChevronRight, User } from 'lucide-react-native'
 import { useTransactions } from '../../../src/context/TransactionContext'
+import { useAuth } from '../../../src/context/AuthContext'
 import { formatINR } from '../../../src/utils/formatters'
 import { Chip } from '../../../src/components/common/Chip'
+import { Button } from '../../../src/components/common/Button'
 import { useBreakpoint } from '../../../src/hooks/useBreakpoint'
 import { Transaction } from '../../../src/data/transactions'
 import { softShadow } from '../../../src/theme/shadows'
 
 export default function TransactionsScreen() {
   const router = useRouter()
+  const { isGuest } = useAuth()
   const { transactions } = useTransactions()
   const { isPhone } = useBreakpoint()
   const [filter, setFilter] = useState<'ALL' | 'PAID' | 'REFUNDED'>('ALL')
@@ -73,8 +76,43 @@ export default function TransactionsScreen() {
           ))}
         </View>
 
-        {/* Grouped List */}
-        {Object.keys(grouped).length === 0 ? (
+        {/* GUEST EXPLORER STATE */}
+        {isGuest ? (
+          <View
+            style={[softShadow, { borderRadius: 20 }]}
+            className="bg-white border border-black/[0.04] p-8 sm:p-12 items-center text-center max-w-md mx-auto my-6 w-full gap-4"
+          >
+            <View className="w-16 h-16 rounded-full bg-blue-50 items-center justify-center">
+              <Receipt size={30} color="#2563EB" />
+            </View>
+            <View className="items-center">
+              <Text className="text-lg font-bold text-slate-900 mb-1 text-center">
+                Guest Explorer
+              </Text>
+              <Text className="text-xs text-slate-500 max-w-xs text-center leading-relaxed">
+                You are currently exploring as a guest. Sign in to view your verified membership invoices and payment history.
+              </Text>
+            </View>
+            <View className="flex-row gap-2 w-full justify-center">
+              <Button
+                variant="primary"
+                size="md"
+                onPress={() => router.push('/login' as any)}
+                className="px-5"
+              >
+                Sign In
+              </Button>
+              <Button
+                variant="secondary"
+                size="md"
+                onPress={() => router.push('/home' as any)}
+                className="px-5"
+              >
+                Browse Gyms
+              </Button>
+            </View>
+          </View>
+        ) : Object.keys(grouped).length === 0 ? (
           <View
             style={[softShadow, { borderRadius: 16 }]}
             className="bg-white border border-black/[0.04] p-8 sm:p-12 items-center text-center max-w-md mx-auto my-6 w-full gap-3"

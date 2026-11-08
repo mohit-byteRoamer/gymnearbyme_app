@@ -22,6 +22,7 @@ import {
 import QRCode from 'react-native-qrcode-svg'
 import { formatINR } from '../../src/utils/formatters'
 import { usePlan } from '../../src/context/PlanContext'
+import { useAuth } from '../../src/context/AuthContext'
 import { useDevState } from '../../src/context/DevStateContext'
 import { useToast } from '../../src/context/ToastContext'
 import { useBreakpoint } from '../../src/hooks/useBreakpoint'
@@ -31,6 +32,7 @@ import { softShadow, softShadowSm } from '../../src/theme/shadows'
 
 export default function MyPlanScreen() {
   const router = useRouter()
+  const { isGuest } = useAuth()
   const { activePlan, pastPlans, renewPlan, requestRefund } = usePlan()
   const { activePlanOverride } = useDevState()
   const { showToast } = useToast()
@@ -108,8 +110,46 @@ export default function MyPlanScreen() {
           )}
         </View>
 
+        {/* GUEST EXPLORER STATE */}
+        {isGuest && (
+          <View
+            style={[softShadow, { borderRadius: 20 }]}
+            className="bg-white border border-black/[0.04] p-8 sm:p-12 items-center text-center max-w-md mx-auto my-6 w-full gap-4"
+          >
+            <View className="w-16 h-16 rounded-full bg-blue-50 items-center justify-center">
+              <Dumbbell size={32} color="#2563EB" />
+            </View>
+            <View className="items-center">
+              <Text className="text-lg font-bold text-slate-900 mb-1 text-center">
+                Guest Explorer
+              </Text>
+              <Text className="text-xs text-slate-500 max-w-xs text-center leading-relaxed">
+                You are currently browsing as a guest. Sign in to purchase plans, track membership days, and generate entry passes.
+              </Text>
+            </View>
+            <View className="flex-row gap-2 w-full justify-center">
+              <Button
+                variant="primary"
+                size="md"
+                onPress={() => router.push('/login' as any)}
+                className="px-5"
+              >
+                Sign In
+              </Button>
+              <Button
+                variant="secondary"
+                size="md"
+                onPress={() => router.push('/home' as any)}
+                className="px-5"
+              >
+                Browse Gyms
+              </Button>
+            </View>
+          </View>
+        )}
+
         {/* STATE 1: EMPTY */}
-        {effectiveState === 'EMPTY' && (
+        {!isGuest && effectiveState === 'EMPTY' && (
           <View
             style={[softShadow, { borderRadius: 20 }]}
             className="bg-white border border-black/[0.04] p-8 sm:p-12 items-center text-center max-w-md mx-auto my-6 w-full gap-4"

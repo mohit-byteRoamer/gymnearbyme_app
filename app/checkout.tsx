@@ -23,7 +23,7 @@ export default function CheckoutScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const params = useLocalSearchParams<{ gym?: string; plan?: string }>()
-  const { user, updatePhone } = useAuth()
+  const { user, updatePhone, isGuest } = useAuth()
 
   const gymId = params.gym || 'iron-forge-fitness'
   const planId = params.plan || 'plan-iron-monthly'
@@ -51,7 +51,7 @@ export default function CheckoutScreen() {
   }
 
   const handlePay = async () => {
-    if (!user?.phone || user.phone === '+919876543210') {
+    if (!user?.phone || user.phone === '+919876543210' || isGuest) {
       const cleanPhone = phone.trim()
       if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
         setPhoneError('Please enter a valid 10-digit mobile number')
@@ -122,13 +122,22 @@ export default function CheckoutScreen() {
 
           {/* Member Details */}
           <View className="gap-1.5">
-            <Text className="text-xs font-bold text-slate-700">Member</Text>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-xs font-bold text-slate-700">Member</Text>
+              {isGuest && (
+                <Pressable onPress={() => router.push('/login' as any)}>
+                  <Text className="text-xs font-semibold text-blue-600">Sign in instead</Text>
+                </Pressable>
+              )}
+            </View>
             <View className="bg-slate-50 rounded-xl p-3 border border-slate-100">
               <Text className="text-sm font-semibold text-slate-900">
-                {user?.name || 'Amritpal Singh'}
+                {isGuest ? 'Guest Explorer' : user?.name || 'Amritpal Singh'}
               </Text>
               <Text className="text-xs text-slate-400">
-                {user?.email || 'amrit.singh@gmail.com'}
+                {isGuest
+                  ? 'Voucher pass will be linked to your mobile number'
+                  : user?.email || 'amrit.singh@gmail.com'}
               </Text>
             </View>
           </View>

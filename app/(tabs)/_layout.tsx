@@ -5,7 +5,7 @@ import { useAuth } from '../../src/context/AuthContext'
 import { View, ActivityIndicator } from 'react-native'
 
 export default function TabsLayout() {
-  const { isAuthenticated, isLoading } = useAuth()
+  const { isAuthenticated, isGuest, isLoading } = useAuth()
 
   if (isLoading) {
     return (
@@ -15,7 +15,8 @@ export default function TabsLayout() {
     )
   }
 
-  if (!isAuthenticated) {
+  // Allow both authenticated users AND guest explorers
+  if (!isAuthenticated && !isGuest) {
     return <Redirect href="/login" />
   }
 
