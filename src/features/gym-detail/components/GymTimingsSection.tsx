@@ -48,7 +48,7 @@ export function GymTimingsSection({ gym }: Props) {
 
       {/* Schedule Table */}
       <View className="rounded-3xl border border-slate-200/90 bg-white overflow-hidden shadow-xs">
-        {gym.timingsSchedule.map((t, idx) => {
+        {(gym.timingsSchedule || []).map((t, idx) => {
           const isToday =
             t.day.toLowerCase() === todayName.toLowerCase() || t.isToday
 

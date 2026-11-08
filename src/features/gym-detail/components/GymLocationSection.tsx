@@ -23,7 +23,7 @@ export function GymLocationSection({ gym }: Props) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
-    await Clipboard.setStringAsync(gym.address)
+    await Clipboard.setStringAsync(gym.address || '')
     setCopied(true)
     showToast('Address copied to clipboard!', 'success')
     setTimeout(() => setCopied(false), 2000)

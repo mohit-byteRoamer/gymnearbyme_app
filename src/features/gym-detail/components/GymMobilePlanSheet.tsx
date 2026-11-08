@@ -38,10 +38,19 @@ export function GymMobilePlanSheet({ gym }: Props) {
   const monthlyPlan = plans.find((p) => p.durationDays === 30) || plans[0]
   const baseMonthlyPrice = monthlyPlan?.price || 1200
 
+  const fallbackPlan: Plan = {
+    id: 'plan-default',
+    name: 'Standard Pass',
+    durationDays: 30,
+    price: gym.minPrice || 1200,
+    features: ['General gym floor access', 'Locker access'],
+  }
+
   const activePlan: Plan =
     plans.find((p) => p.id === selectedPlanId) ||
     plans.find((p) => p.isRecommended) ||
-    plans[0]
+    plans[0] ||
+    fallbackPlan
 
   const handleCheckout = () => {
     if (!gym.acceptsOnlineJoining) {

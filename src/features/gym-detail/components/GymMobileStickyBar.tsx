@@ -19,9 +19,12 @@ export function GymMobileStickyBar({ gym }: Props) {
   if (!isPhone) return null
 
   const plans = gym.plans || []
-  const minPerDay = Math.min(
-    ...plans.map((p) => calculatePerDay(p.price, p.durationDays))
-  )
+  const minPerDay =
+    plans.length > 0
+      ? Math.min(...plans.map((p) => calculatePerDay(p.price, p.durationDays)))
+      : gym.minPrice
+      ? Math.round(gym.minPrice / 30)
+      : 33
 
   return (
     <View

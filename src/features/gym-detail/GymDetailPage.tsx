@@ -39,7 +39,8 @@ export function GymDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const gymId = params.id || 'cult-fit-sarabha'
+  const rawId = Array.isArray(params.id) ? params.id[0] : params.id
+  const gymId = rawId || 'cult-fit-sarabha'
 
   useEffect(() => {
     let isMounted = true

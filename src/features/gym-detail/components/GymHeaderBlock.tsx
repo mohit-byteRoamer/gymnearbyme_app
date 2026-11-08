@@ -28,11 +28,14 @@ export function GymHeaderBlock({ gym }: Props) {
   }
 
   const handleCall = () => {
-    Linking.openURL(`tel:${gym.phone}`)
+    if (gym.phone) {
+      Linking.openURL(`tel:${gym.phone}`)
+    }
   }
 
   const handleWhatsApp = () => {
-    const cleanNumber = gym.whatsapp.replace(/\D/g, '')
+    const rawNum = gym.whatsapp || gym.phone || '+919876543211'
+    const cleanNumber = rawNum.replace(/\D/g, '')
     const msg = encodeURIComponent(
       `Hi, I found ${gym.name} on GymApp Ludhiana and would like to know more about trial passes.`
     )
